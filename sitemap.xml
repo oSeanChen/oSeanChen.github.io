@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://oseanchen.github.io/2022/10/22/%E7%80%8F%E8%A6%BD%E5%99%A8%E8%BC%B8%E5%85%A5%E7%B6%B2%E5%9D%80%E5%BE%8C%E5%88%B0%E5%87%BA%E7%8F%BE%E9%A0%81%E9%9D%A2%E6%9C%83%E7%99%BC%E7%94%9F%E4%BB%80%E9%BA%BC%E4%BA%8B%E6%83%85%EF%BC%9F/</loc>
+    
+    <lastmod>2022-10-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://oseanchen.github.io/2022/10/22/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AMigration/</loc>
     
     <lastmod>2022-10-22</lastmod>
@@ -339,6 +348,13 @@
   
   <url>
     <loc>https://oseanchen.github.io/categories/Rails%E5%9F%BA%E7%A4%8E/</loc>
+    <lastmod>2022-10-22</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://oseanchen.github.io/categories/%E7%B6%B2%E8%B7%AF%E6%A6%82%E5%BF%B5/</loc>
     <lastmod>2022-10-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
