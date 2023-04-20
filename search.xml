@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>RabbitMQ 介紹</title>
+      <link href="/2023/04/21/RabbitMQ-%E4%BB%8B%E7%B4%B9/"/>
+      <url>/2023/04/21/RabbitMQ-%E4%BB%8B%E7%B4%B9/</url>
+      
+        <content type="html"><![CDATA[<h1 id="RabbitMQ-介紹"><a href="#RabbitMQ-介紹" class="headerlink" title="RabbitMQ 介紹"></a>RabbitMQ 介紹</h1><h2 id="軟體簡介"><a href="#軟體簡介" class="headerlink" title="軟體簡介"></a>軟體簡介</h2><ul><li>著名應用 message Queue (message brokers) 的開源軟體</li><li>支持 AMQP 0-9-1 等多種訊息傳遞協定</li><li>支援多種語言及插件工具</li><li>圖形化介面管理及監控訊息狀態</li><li>其他類似軟體 EX: Kafka、AWS SQS…</li></ul><h2 id="基本架構及名詞解釋"><a href="#基本架構及名詞解釋" class="headerlink" title="基本架構及名詞解釋"></a>基本架構及名詞解釋</h2><p><img src="https://i.imgur.com/vJlh8T5.png"></p><ul><li><code>Producer</code> ：發送訊息的程式</li><li><code>Queue</code>：儲存訊息等待接收的緩衝區域，具有 FIFO 特性（先進先出）</li><li><code>Consumer</code>：訊息接收的程式</li><li><code>Exchange</code>：決定將訊息推送至指定位置<ul><li>Direct：直接丟給指定的 Queue</li><li>Topic：設定 binding 規則，丟給符合的 Queue</li><li>Fanout：一次丟給全部負責的 Queue</li></ul></li></ul><h2 id="5-種-RabbitMQ-設計模式"><a href="#5-種-RabbitMQ-設計模式" class="headerlink" title="5 種 RabbitMQ 設計模式"></a>5 種 RabbitMQ 設計模式</h2><h3 id="1-Simple"><a href="#1-Simple" class="headerlink" title="1. Simple"></a>1. Simple</h3><p>最基本的模式，只有一個 Producer 負責送 message 給 Queue、只有一個 Consumer 去 Ｑ ueue 裡將 message 接收</p><p><img src="https://i.imgur.com/kphjY7p.png"></p><h3 id="2-Worker"><a href="#2-Worker" class="headerlink" title="2. Worker"></a>2. Worker</h3><p>這模式像是多個工人會共同去完成工作</p><p>同時有多個 Consumer 會去收 Queue 裡的 message，可以增加 message 消化的速率。常用的一種模式，通常是用在大量非同步的作業上，只要連接同一個 Queue，就可以在多台機器上 Consumer 平行處理。</p><p><img src="https://i.imgur.com/IsOedmp.png"></p><h3 id="3-Publish-x2F-Subscibe"><a href="#3-Publish-x2F-Subscibe" class="headerlink" title="3. Publish&#x2F;Subscibe"></a>3. Publish&#x2F;Subscibe</h3><p>可以想像成訂閱頻道或是服務一樣，有新的發表或是訊息就會廣播給訂閱者。</p><p>所以需在 Producer、Queue、Consumer 之間多一個 Exchange，Producer 會先把 message 丟給 Exchange （Type &#x3D; Fanout），Fanout 模式的 Exchange 去決定要把這個 message 丟給綁定（訂閱）的 Queue 上</p><p><img src="https://i.imgur.com/kWcOt87.png"></p><h3 id="4-Routing"><a href="#4-Routing" class="headerlink" title="4. Routing"></a>4. Routing</h3><p>想成貼上標籤（Routing key）並依照來傳送，這個模式同樣用 Exchange 但使用</p><p>當 Producer 把 message 丟給 Exchange（Type &#x3D; Direct） 時，同時要在這個 message 上面帶上一個 routing key，而 Exchange 就會根據這個 routing key，將 message 丟到指定的 Queue 上</p><p>就像下圖的例子，Q1 只會收到關於 orange 相關 routing key 的 message、Q2 則是 black 及 green 的 message</p><p><img src="https://i.imgur.com/lPALPn7.png"></p><h3 id="5-Topics"><a href="#5-Topics" class="headerlink" title="5. Topics"></a>5. Topics</h3><p>也是標上特定標籤，可以想成能區分更仔細的多重標籤。</p><p>類似 Routing 模式，同樣有 Exchange (Type &#x3D; Topic)，也透過 routing key 來分流訊息，差別在 topic 的特性能夠模糊綁定非固定的 routing key。 設定模糊 routing key 的格式需以 .(dot) 分隔的字串，*(star) 只能代替一個單詞、#(bash) 可以代替零個或多個單詞。</p><p>根據下圖的狀況，訊息將使用由三個標籤組成的 routing key 發送，第一個標籤是 “速度”，第二個標籤是 “顏色”，第三個標籤是 “動物”：&lt;速度&gt;.&lt;顏色&gt;.&lt;動物&gt;。</p><p>Q1 以 .orange. 綁定，與 Q2 以 <em>.</em>.rabbit 和 lazy.# 綁定，也就是：</p><ul><li>Q1 會收到所有關於 “橘色動物” 的訊息</li><li>Q2 會收到所有關於 “兔子” 的訊息，以及所有關於 “任何顏色且懶惰動物” 的訊息</li></ul><p><img src="https://i.imgur.com/VkBc4i4.png"></p><p>參考資料：</p><ol><li><a href="https://enzochang.com/rabbitmq-introduction/">RabbitMQ 簡介與 5 種設計模式</a></li><li><a href="https://kucw.github.io/blog/2020/11/rabbitmq/">RabbitMQ 基本介紹、安裝教學</a></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> RabbitMQ </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> RabbitMQ </tag>
+            
+            <tag> Message Queue </tag>
+            
+            <tag> Ａsynchronous </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Spring Boot http method 取得請求參數方法</title>
       <link href="/2023/03/25/Spring-Boot-http-method-%E5%8F%96%E5%BE%97%E8%AB%8B%E6%B1%82%E5%8F%83%E6%95%B8%E6%96%B9%E6%B3%95/"/>
       <url>/2023/03/25/Spring-Boot-http-method-%E5%8F%96%E5%BE%97%E8%AB%8B%E6%B1%82%E5%8F%83%E6%95%B8%E6%96%B9%E6%B3%95/</url>
