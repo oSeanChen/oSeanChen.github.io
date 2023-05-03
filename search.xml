@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>JAVA main()</title>
+      <link href="/2023/05/03/JAVA-main/"/>
+      <url>/2023/05/03/JAVA-main/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Java-main"><a href="#Java-main" class="headerlink" title="Java main()"></a>Java main()</h1><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">HelloWorld</span> &#123;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">System.out.println(<span class="string">&quot;Hello World!!&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><ul><li>一個類別只有一個 main 方法並且是整個程式的執行進入點（Entry point）。</li><li>封裝等級必須宣告為 public，且只有主類別可以宣告為 public。（預設為 public，所以 public 可省略）</li><li>主類別名稱必須與主檔名相同（不含副檔名）。</li><li>修飾字的宣告只能宣告為 abstract、final 或省略不寫。</li><li>public static void 是固定不可以改變的</li></ul><h2 id="名詞解釋"><a href="#名詞解釋" class="headerlink" title="名詞解釋"></a>名詞解釋</h2><h4 id="public"><a href="#public" class="headerlink" title="public"></a>public</h4><p>表示方法是公開，可以在這個 class 以外的地方使用</p><h4 id="static"><a href="#static" class="headerlink" title="static"></a>static</h4><p>表示靜態，是描述這個方法的狀態，程式剛開始執行前，就要把這些東西載入到記憶體，main() 方法不需要產生物件（Object）就能被執行，所以它必須是個 “static” 成員</p><h4 id="void"><a href="#void" class="headerlink" title="void"></a>void</h4><p>表示這個方法沒有回傳值，一但 main()方法終止，java 程序也將終止。因此，從 main()方法返回沒有任何意義。</p><h4 id="main-String-args"><a href="#main-String-args" class="headerlink" title="main (String[] args)"></a>main (String[] args)</h4><p>為 java jvm 找尋程式執行的進入點辨識的方法，參數可以接受字串陣列當做參數，這是 JVM 定義好的，String[] 表示字串陣列，args 是為這些字串陣列取的變數名稱，當然也可以寫 main（String[] abc）。<br>args：arguments</p><hr><p><strong>參考資料:</strong></p><ol><li><a href="https://www.geeksforgeeks.org/java-main-method-public-static-void-main-string-args/">https://www.geeksforgeeks.org/java-main-method-public-static-void-main-string-args/</a></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java Basic </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>JAVA Static</title>
       <link href="/2023/04/29/JAVA-Static/"/>
       <url>/2023/04/29/JAVA-Static/</url>
