@@ -1,3 +1,4 @@
+https://oseanchen.github.io/2023/08/23/%E7%B7%A8%E7%A2%BC-encoding-vs-%E5%8A%A0%E8%A7%A3%E5%AF%86-vs-%E9%9B%9C%E6%B9%8A-Hash/
 https://oseanchen.github.io/2023/04/29/JAVA-Static/
 https://oseanchen.github.io/2023/03/25/Spring-Boot-http-method-%E5%8F%96%E5%BE%97%E8%AB%8B%E6%B1%82%E5%8F%83%E6%95%B8%E6%96%B9%E6%B3%95/
 https://oseanchen.github.io/2023/05/03/JAVA-main/
@@ -60,6 +61,9 @@ https://oseanchen.github.io/tags/RabbitMQ/
 https://oseanchen.github.io/tags/Message-Queue/
 https://oseanchen.github.io/tags/Asynchronous/
 https://oseanchen.github.io/tags/Java/
+https://oseanchen.github.io/tags/%E7%B7%A8%E7%A2%BC/
+https://oseanchen.github.io/tags/%E5%8A%A0%E5%AF%86/
+https://oseanchen.github.io/tags/%E9%9B%9C%E6%B9%8A%E6%BC%94%E7%AE%97/
 https://oseanchen.github.io/categories/Rails%E5%A5%97%E4%BB%B6/
 https://oseanchen.github.io/categories/Spring-Boot/
 https://oseanchen.github.io/categories/Ruby%E5%9F%BA%E7%A4%8E/
@@ -68,3 +72,4 @@ https://oseanchen.github.io/categories/%E7%B6%B2%E8%B7%AF%E6%A6%82%E5%BF%B5/
 https://oseanchen.github.io/categories/Rails%E5%9F%BA%E7%A4%8E/
 https://oseanchen.github.io/categories/RabbitMQ/
 https://oseanchen.github.io/categories/Java-Basic/
+https://oseanchen.github.io/categories/%E5%AF%86%E7%A2%BC%E5%AD%B8/
