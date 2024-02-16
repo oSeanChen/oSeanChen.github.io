@@ -4,6 +4,35 @@
   
     
     <entry>
+      <title>JPA, JDBC, Hibernate</title>
+      <link href="/2024/02/16/JPA,%20JDBC,%20Hibernate/"/>
+      <url>/2024/02/16/JPA,%20JDBC,%20Hibernate/</url>
+      
+        <content type="html"><![CDATA[<h2 id="JPA-Java-Persistance-API"><a href="#JPA-Java-Persistance-API" class="headerlink" title="JPA (Java Persistance API)"></a>JPA (Java Persistance API)</h2><ul><li><p>字面意思就是一個 Java 的持久化 API，將資料「儲存」與「讀取」的過程，就稱為「持久化」也可以說是將資料儲存到資料庫的過程。</p></li><li><p>JPA 其實是一個 Java 標準，定義了一組用於 ORM 的 API。它提供了一個標準的方法，使 Java 開發者能夠透過標準的介面來執行 ORM 操作，而不受特定數據庫供應商或是 ORM 框架的限制。</p></li></ul><h2 id="Hibernate"><a href="#Hibernate" class="headerlink" title="Hibernate"></a>Hibernate</h2><ul><li>Hibernate 是一個開源的 ORM 框架，實現了 JPA 標準，是 Java 中最廣泛使用的 ORM 框架之一。</li></ul><h2 id="JDBC-Java-Database-Connectivity"><a href="#JDBC-Java-Database-Connectivity" class="headerlink" title="JDBC (Java Database Connectivity)"></a>JDBC (Java Database Connectivity)</h2><ul><li>JDBC 是透過 Java 來連接資料庫的一種技術。它提供了一組用於執行 SQL 查詢、更新和管理數據庫連接的 Java 介面。透過 JDBC，Java 可以與各種不同的數據庫系統進行通信。</li></ul><h2 id="Spring-JDBC"><a href="#Spring-JDBC" class="headerlink" title="Spring JDBC"></a>Spring JDBC</h2><ul><li>由 Spring 提供基於 JDBC 的模組，它提供了一個抽象層，用於簡化 JDBC 操作並處理資源管理。允許開發者使用簡單的 API 來執行 SQL 查詢、更新、刪除等操作，<strong>仍需使用原始的 SQL 語法進行資料庫操作</strong>。</li></ul><h2 id="Spring-Data-JPA"><a href="#Spring-Data-JPA" class="headerlink" title="Spring Data JPA"></a>Spring Data JPA</h2><ul><li>Spring Data 項目中的一部分，它是對 Java Persistence API (JPA) 的實現，<strong>應用了 ORM 的概念，並操作 JAVA object 的方式來進行資料庫的操作</strong>，並且可以用於多種數據庫，而不僅僅是關聯式數據庫。</li></ul><hr><p><strong>參考資料:</strong></p><ol><li><p><a href="https://medium.com/learning-from-jhipster/13-%E7%94%9A%E9%BA%BC%E6%98%AF-jdbc-orm-jpa-orm%E6%A1%86%E6%9E%B6-hibernate-c762a8c5e112">甚麼是 JDBC、ORM、 JPA、ORM框架、Hibernate</a></p></li><li><p><a href="https://www.baeldung.com/learn-jpa-hibernate">Learn JPA &amp; Hibernate</a></p></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Java Basic </category>
+          
+          <category> Spring Boot </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Spring Boot </tag>
+            
+            <tag> Java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>編碼(encoding) vs 加解密 vs 雜湊(Hash)</title>
       <link href="/2023/08/23/%E7%B7%A8%E7%A2%BC-encoding-vs-%E5%8A%A0%E8%A7%A3%E5%AF%86-vs-%E9%9B%9C%E6%B9%8A-Hash/"/>
       <url>/2023/08/23/%E7%B7%A8%E7%A2%BC-encoding-vs-%E5%8A%A0%E8%A7%A3%E5%AF%86-vs-%E9%9B%9C%E6%B9%8A-Hash/</url>

@@ -1,3 +1,4 @@
+https://oseanchen.github.io/2024/02/16/JPA,%20JDBC,%20Hibernate/
 https://oseanchen.github.io/about/index.html
 https://oseanchen.github.io/categories/index.html
 https://oseanchen.github.io/tags/index.html
@@ -73,3 +74,4 @@ https://oseanchen.github.io/categories/Rails%E5%9F%BA%E7%A4%8E/
 https://oseanchen.github.io/categories/RabbitMQ/
 https://oseanchen.github.io/categories/Java-Basic/
 https://oseanchen.github.io/categories/%E5%AF%86%E7%A2%BC%E5%AD%B8/
+https://oseanchen.github.io/categories/Java-Basic/Spring-Boot/
