@@ -1,4 +1,5 @@
 https://oseanchen.github.io/2024/02/16/JPA,%20JDBC,%20Hibernate/
+https://oseanchen.github.io/2024/02/21/Spring-Boot-IOC-and-DI/
 https://oseanchen.github.io/about/index.html
 https://oseanchen.github.io/categories/index.html
 https://oseanchen.github.io/tags/index.html
