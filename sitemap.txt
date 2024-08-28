@@ -1,3 +1,4 @@
+https://oseanchen.github.io/2023/03/25/SpringBoot/Spring-Boot-http-method-%E5%8F%96%E5%BE%97%E8%AB%8B%E6%B1%82%E5%8F%83%E6%95%B8%E6%96%B9%E6%B3%95/
 https://oseanchen.github.io/2024/02/21/Spring-Boot-IOC-and-DI/
 https://oseanchen.github.io/2024/05/14/Spring-Boot-Scheduled/
 https://oseanchen.github.io/2024/04/10/Spring-AOP/
@@ -40,7 +41,6 @@ https://oseanchen.github.io/2023/05/03/Java/JAVA-main/
 https://oseanchen.github.io/2023/05/22/Java/equals-%E5%92%8C-%E5%B7%AE%E5%88%A5/
 https://oseanchen.github.io/2022/10/22/%E7%80%8F%E8%A6%BD%E5%99%A8%E8%BC%B8%E5%85%A5%E7%B6%B2%E5%9D%80%E5%BE%8C%E5%88%B0%E5%87%BA%E7%8F%BE%E9%A0%81%E9%9D%A2%E6%9C%83%E7%99%BC%E7%94%9F%E4%BB%80%E9%BA%BC%E4%BA%8B%E6%83%85%EF%BC%9F/
 https://oseanchen.github.io/2023/05/10/SpringBoot/Spring-restTemplate-%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/
-https://oseanchen.github.io/2023/03/25/SpringBoot/Spring-Boot-http-method-%E5%8F%96%E5%BE%97%E8%AB%8B%E6%B1%82%E5%8F%83%E6%95%B8%E6%96%B9%E6%B3%95/
 https://oseanchen.github.io/2023/08/23/%E7%B7%A8%E7%A2%BC-encoding-vs-%E5%8A%A0%E8%A7%A3%E5%AF%86-vs-%E9%9B%9C%E6%B9%8A-Hash/
 https://oseanchen.github.io/googlecf5e0f511fab4bc1.html
 https://oseanchen.github.io/
