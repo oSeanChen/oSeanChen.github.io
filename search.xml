@@ -4,11 +4,30 @@
   
     
     <entry>
+      <title>Spring Security FilterChain 如何進行登入認證</title>
+      <link href="/2024/09/14/Spring-Security-FilterChain-%E5%A6%82%E4%BD%95%E9%80%B2%E8%A1%8C%E7%99%BB%E5%85%A5%E8%AA%8D%E8%AD%89/"/>
+      <url>/2024/09/14/Spring-Security-FilterChain-%E5%A6%82%E4%BD%95%E9%80%B2%E8%A1%8C%E7%99%BB%E5%85%A5%E8%AA%8D%E8%AD%89/</url>
+      
+        <content type="html"><![CDATA[<div class="note simple"><p>進行 Spring Security 的實作時碰到很多底層運行架構不是很了解的狀況，上網查找一些資訊拼湊出一個比較容易理解的流程。主要是針對帳號密碼登入時的授權部分，因為牽涉到很多元件的運作，所以需要整理一下。</p></div><h3 id="帳號密碼認證流程"><a href="#帳號密碼認證流程" class="headerlink" title="帳號密碼認證流程"></a>帳號密碼認證流程</h3><p>認證和授權動作都是在請求到達 Spring MVC 的運作之前，Security 就已經透過一套機制進行一系列的驗證，首先會先碰到的就是</p><ul><li>(1) <strong><code>Filter Chain</code></strong> 的系統，這邊會透過一系列的過濾篩選，只要請求的一些 header 或是任何內容有不符合的就會先被過濾掉，算是攔截器的概念，層層篩選其中關於登入的部分會由 <strong><code>UsernamePasswordAuthenticationFilter</code></strong> 進行處理，接著會被導入</li><li>(2) <strong><code>Authentication Manager</code></strong> 統一針對授權去管理，從一堆 Provider 中找到一個可以成功認證的</li><li>(3) <strong><code>Authentication Provider</code></strong> 來判斷帳號密碼是否正確，密碼的加密及認證等等處理 (配置密碼加密的類型 PasswordEncoder 也是從這邊設置)，他會從 <strong><code>UserDetailService</code></strong> 這個介面取出對應的 User 並且結合其他資訊封裝成 <strong><code>UserDetails</code></strong> (使用者相關資訊、權限…) 這個 Security 所使用的使用者資訊界面物件，然後交由</li><li>(4) <strong><code>Authentication Provider</code></strong> 使用進行驗證，</li><li>(5) (6) 如果驗證成功就會產生一個 已驗證的 <strong><code>Authentication</code></strong> 物件存於 <strong><code>Security Context</code></strong> ，這位置預設保存在 Session ，所以 Authentication 會和 Session 綁訂，後續請求也都可以重複取出使用，不必重新驗證。如果失敗就拋出例外回前端。</li><li>成功的話 (7) 接著就會將請求導入後續我們熟悉的 MVC 架構流程。</li></ul><p><img src="https://ithelp.ithome.com.tw/upload/images/20240914/201509773bAvCQLiQT.png" alt="https://ithelp.ithome.com.tw/upload/images/20240914/201509773bAvCQLiQT.png"></p><h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref:"></a>Ref:</h3><ul><li><a href="https://backendstory.com/spring-security-authentication-architecture-explained-in-depth/">Spring Security: Authentication Architecture Explained In Depth</a></li><li><a href="https://medium.com/@heather_programming/spring-security-%E5%B8%B3%E8%99%9F%E5%AF%86%E7%A2%BC%E9%A9%97%E8%AD%89-98a4bfd03abe">Spring Security】帳號密碼驗證</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Spring Boot </category>
+          
+      </categories>
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Spring Boot Scheduled</title>
       <link href="/2024/05/14/Spring-Boot-Scheduled/"/>
       <url>/2024/05/14/Spring-Boot-Scheduled/</url>
       
-        <content type="html"><![CDATA[<h2 id="排程服務-Cronjob"><a href="#排程服務-Cronjob" class="headerlink" title="排程服務 Cronjob"></a>排程服務 Cronjob</h2><ul><li>排程服務主要應用針對例行的處理，根據設定的時間或是間隔自動啟動​</li><li>多應用 cron 的表達式去設定​</li><li>常見應用的服務如 Cron, Spring Task Scheduling, windows任務排程器, Airflow, 各雲端服務商對應的 Cronjob​ 服務</li></ul><h2 id="Spring-Task-Scheduling-用法"><a href="#Spring-Task-Scheduling-用法" class="headerlink" title="Spring Task Scheduling 用法"></a>Spring Task Scheduling 用法</h2><ol><li>要執行排程的 class 加入 <code>@Component</code> 變成 bean</li><li>SpringApplication.run 的啟動類加上 <code>@EnableScheduling</code> 才會啟用​</li></ol>]]></content>
+        <content type="html"><![CDATA[<h2 id="排程服務-Cronjob"><a href="#排程服務-Cronjob" class="headerlink" title="排程服務 Cronjob"></a>排程服務 Cronjob</h2><ul><li>排程服務主要應用針對例行的處理，根據設定的時間或是間隔自動啟動 ​</li><li>多應用 cron 的表達式去設定 ​</li><li>常見應用的服務如 Cron, Spring Task Scheduling, windows 任務排程器, Airflow, 各雲端服務商對應的 Cronjob​ 服務</li></ul><h2 id="Spring-Task-Scheduling-用法"><a href="#Spring-Task-Scheduling-用法" class="headerlink" title="Spring Task Scheduling 用法"></a>Spring Task Scheduling 用法</h2><ol><li>要執行排程的 class 加入 <code>@Component</code> 變成 bean</li><li>SpringApplication.run 的啟動類加上 <code>@EnableScheduling</code> 才會啟用 ​</li></ol>]]></content>
       
       
       <categories>
