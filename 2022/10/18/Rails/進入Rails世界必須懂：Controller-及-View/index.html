@@ -1,0 +1,281 @@
+<!DOCTYPE html><html lang="zh-TW" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>進入Rails世界必須懂：Controller 及 View | Sean's Blog</title><meta name="author" content="Sean"><meta name="copyright" content="Sean"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="ffffff"><meta name="description" content="開頭先來回顧一下前面的圖片，今天來解釋一下我們 MVC 一直提到的 C (Controller) 及 C (View) 部分，前兩篇講完 routes 的部分，接著當解讀完 routes 之後就是將工作轉往 controller 及 action 的部分，將後續資料的呈現及使用者的動作做完。   C"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://oseanchen.github.io/2022/10/18/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AController-%E5%8F%8A-View/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="sy_aItoBmo7s6Mb8wbh97IV_N4jjnUXRzwBNb4brupA"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查詢的內容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '複製成功',
+    error: '複製錯誤',
+    noSupport: '瀏覽器不支援'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '剛剛',
+    min: '分鐘前',
+    hour: '小時前',
+    day: '天前',
+    month: '個月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '載入更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '進入Rails世界必須懂：Controller 及 View',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-24 01:20:37'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/profile2.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">42</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">11</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-user"></i><span> About Me</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="Sean's Blog"><span class="site-name">Sean's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜尋</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-user"></i><span> About Me</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">進入Rails世界必須懂：Controller 及 View</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">發表於</span><time class="post-meta-date-created" datetime="2022-10-18T00:59:53.000Z" title="發表於 2022-10-18 08:59:53">2022-10-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新於</span><time class="post-meta-date-updated" datetime="2023-08-23T17:20:37.532Z" title="更新於 2023-08-24 01:20:37">2023-08-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Rails%E5%9F%BA%E7%A4%8E/">Rails基礎</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="進入Rails世界必須懂：Controller 及 View"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><div class="note simple"><p>開頭先來回顧一下前面的圖片，今天來解釋一下我們 MVC 一直提到的 C (Controller) 及 C (View) 部分，前兩篇講完 routes 的部分，接著當解讀完 routes 之後就是將工作轉往 controller 及 action 的部分，將後續資料的呈現及使用者的動作做完。<br><img src="https://i.imgur.com/hf9CtBC.png"></p>
+</div>
+
+<h2 id="Controller-與-V-iew-是什麼呢？"><a href="#Controller-與-V-iew-是什麼呢？" class="headerlink" title="Controller 與 Ｖ iew 是什麼呢？"></a>Controller 與 Ｖ iew 是什麼呢？</h2><p><code>Controller</code> 是要拿來做什麼用的？ 從意思來看應該可以看到 control 這個單字，表示是要來進行一些控制的部分，主要是控制資料的流程。他可能會進行：</p>
+<ul>
+<li>跟 Model 要資料</li>
+<li>把從 Model 收到的資料丟給 View</li>
+<li>需要存取外部服務（例如金流串接）等</li>
+</ul>
+<p><code>View</code> 的話則是可以將 Controller 的資料呈現出來，就是一種回傳 HTML 的方法。</p>
+<h2 id="和路徑設定的關聯"><a href="#和路徑設定的關聯" class="headerlink" title="和路徑設定的關聯"></a>和路徑設定的關聯</h2><p>前面一篇提到的文章相關路徑設計，其實我們 resources 後面符號，用複數名稱對應到的就是 controller 的名字</p>
+<figure class="highlight rb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Rails.application.routes.draw <span class="keyword">do</span></span><br><span class="line">  resources <span class="symbol">:articles</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>還記得路徑中有對應的 controller 及 action 吧</p>
+<figure class="highlight rb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span>rails routes -c articles</span><br><span class="line">   Prefix    Verb   <span class="variable constant_">URI</span> Pattern                  Controller<span class="comment">#Action</span></span><br><span class="line">    articles <span class="variable constant_">GET</span>    /articles(.<span class="symbol">:format</span>)          articles<span class="comment">#index</span></span><br><span class="line">             <span class="variable constant_">POST</span>   /articles(.<span class="symbol">:format</span>)          articles<span class="comment">#create</span></span><br><span class="line"> new_article <span class="variable constant_">GET</span>    /articles/new(.<span class="symbol">:format</span>)      articles<span class="comment">#new</span></span><br><span class="line">edit_article <span class="variable constant_">GET</span>    /articles/<span class="symbol">:id/edit</span>(.<span class="symbol">:format</span>) articles<span class="comment">#edit</span></span><br><span class="line">     article <span class="variable constant_">GET</span>    /articles/<span class="symbol">:id</span>(.<span class="symbol">:format</span>)      articles<span class="comment">#show</span></span><br><span class="line">             <span class="variable constant_">PATCH</span>  /articles/<span class="symbol">:id</span>(.<span class="symbol">:format</span>)      articles<span class="comment">#update</span></span><br><span class="line">             <span class="variable constant_">PUT</span>    /articles/<span class="symbol">:id</span>(.<span class="symbol">:format</span>)      articles<span class="comment">#update</span></span><br><span class="line">             <span class="variable constant_">DELETE</span> /articles/<span class="symbol">:id</span>(.<span class="symbol">:format</span>)      articles<span class="comment">#destroy</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="建立-controller"><a href="#建立-controller" class="headerlink" title="建立 controller"></a>建立 controller</h2><p>可以手動建立或是在終端機請 rails 幫我們建立，可以長出相關的檔案</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rails generate controller articles</span><br></pre></td></tr></table></figure>
+
+<p>看一下檔案名稱及內部長怎麼樣吧<br><img src="https://i.imgur.com/8DOdnEX.png"></p>
+<p>會在 <code>app/controller</code> 下面產生出相關的檔案，可以注意到 controller 名稱是叫做<code>articles_controller.rb</code>，點開檔案內部看看。</p>
+<figure class="highlight rb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ArticlesController</span> &lt; <span class="title class_ inherited__">ApplicationController</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>裡面是一個類別叫做 ArticlesController 並且繼承自 ApplicationController<br>可以注意到檔名跟類別名稱不同，檔名是用蛇式、類別名稱則是大駝峰。</p>
+<h2 id="撰寫-action-對應到-view-去吧"><a href="#撰寫-action-對應到-view-去吧" class="headerlink" title="撰寫 action 對應到 view 去吧"></a>撰寫 action 對應到 view 去吧</h2><p>如果我們只有寫好路徑，到那些我們想去的位置例如 index 的位置 (&#x2F;articles) 會看到瀏覽器上面顯示錯誤訊息找不到 action</p>
+<p><img src="https://i.imgur.com/UqPD5vf.png"></p>
+<p>所以現在要寫個 index action 到 controller 裡面<br>同時也需要對應給個 view 的檔案讓這個 action 知道要把相關的資料控制到哪邊</p>
+<h3 id="action-建立"><a href="#action-建立" class="headerlink" title="action 建立"></a>action 建立</h3><p>定義一個 index 的 action</p>
+<figure class="highlight rb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ArticlesController</span> &lt; <span class="title class_ inherited__">ApplicationController</span></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">index</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>回到瀏覽器會看到，錯誤訊息變成找不到 template ，這個 template 其實就是我們在 rails 中會使用的 html.erb 檔案，也就是我們說的 view</p>
+<p><img src="https://i.imgur.com/wkIeYE8.png"></p>
+<h3 id="view-建立"><a href="#view-建立" class="headerlink" title="view 建立"></a>view 建立</h3><p>因為需要對應 index ，所以檔名也要跟 action 一樣，就建立一個檔案命名為 <code>index.html.erb</code> ，像這種特殊的 <code>html.erb</code> 檔案 可以同時在內部寫 html 標籤 及 ruby 的語法。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h1</span>&gt;</span>這裡是 articles 的 index<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>對應到 &#x2F;articles 頁面就會看到我們建立好的標籤及內容<br><img src="https://i.imgur.com/8GGwcZA.png"></p>
+<h2 id="如何在-view-上面看到-controller-傳遞的參數"><a href="#如何在-view-上面看到-controller-傳遞的參數" class="headerlink" title="如何在 view 上面看到 controller 傳遞的參數"></a>如何在 view 上面看到 controller 傳遞的參數</h2><p>我們可以把 action 裡面寫上 <code>render html: params</code></p>
+<figure class="highlight rb"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">ArticlesController</span> &lt; <span class="title class_ inherited__">ApplicationController</span></span><br><span class="line">  <span class="keyword">def</span> <span class="title function_">index</span></span><br><span class="line">    render <span class="symbol">html:</span> params</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p>瀏覽器的 view 就可以接受到 action 的執行內容，要把 params 呈現在畫面上，就會看到這個 view 對應的 controller 還有 action 是什麼</p>
+<p><img src="https://i.imgur.com/x1AH4FW.png"></p>
+<p>如果在網址的後面加上 <code>?</code> 後面跟的那串東西會被當做參數傳進一個特別的變數叫做 <code>params</code>。這是 Rails 預先幫我們定義好的，它可以捕捉到這個頁面的資訊，然後你就會看到頁面顯示成這樣。</p>
+<p><img src="https://i.imgur.com/jgGhFcf.png"></p>
+<p>這會讓你在設計路徑時多帶入一些參數，讓這個頁面可以做使用。</p>
+<hr>
+<p>參考資料：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://railsbook.tw/chapters/12-controllers">為你自己學 Ruby on Rails</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://oseanchen.github.io">Sean</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章連結: </span><span class="post-copyright-info"><a href="https://oseanchen.github.io/2022/10/18/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AController-%E5%8F%8A-View/">https://oseanchen.github.io/2022/10/18/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AController-%E5%8F%8A-View/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版權聲明: </span><span class="post-copyright-info">本部落格所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 許可協議。轉載請註明來自 <a href="https://oseanchen.github.io" target="_blank">Sean's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Rails/">Rails</a></div><div class="post_share"><div class="social-share" data-image="/img/profile2.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/10/17/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9ARoutes-%E4%B8%8B/" title="進入Rails世界必須懂：Routes (下)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">進入Rails世界必須懂：Routes (下)</div></div></a></div><div class="next-post pull-right"><a href="/2022/10/19/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AModel-%E7%9B%B8%E9%97%9C%E4%BB%8B%E7%B4%B9-%E5%8F%8A-CRUD-%E4%B8%8A/" title="進入Rails世界必須懂：Model 相關介紹 及 CRUD (上)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">進入Rails世界必須懂：Model 相關介紹 及 CRUD (上)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相關推薦</span></div><div class="relatedPosts-list"><div><a href="/2022/08/20/Ruby/%E6%80%8E%E9%BA%BC%E5%A4%A7%E5%AE%B6%E9%83%BD%E4%B8%80%E7%9B%B4%E5%9C%A8%E8%AA%AA-REST-%E5%92%8C-RESTful/" title="怎麼大家都一直在說 REST 和 RESTful?"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-20</div><div class="title">怎麼大家都一直在說 REST 和 RESTful?</div></div></a></div><div><a href="/2022/10/22/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AMigration/" title="進入Rails世界必須懂：Migration"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-22</div><div class="title">進入Rails世界必須懂：Migration</div></div></a></div><div><a href="/2022/10/19/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AModel-%E7%9B%B8%E9%97%9C%E4%BB%8B%E7%B4%B9-%E5%8F%8A-CRUD-%E4%B8%8A/" title="進入Rails世界必須懂：Model 相關介紹 及 CRUD (上)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-19</div><div class="title">進入Rails世界必須懂：Model 相關介紹 及 CRUD (上)</div></div></a></div><div><a href="/2022/10/22/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AModel-%E7%9B%B8%E9%97%9C%E4%BB%8B%E7%B4%B9-%E5%8F%8A-CRUD-%E4%B8%8B/" title="進入Rails世界必須懂：Model 相關介紹 及 CRUD (下)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-22</div><div class="title">進入Rails世界必須懂：Model 相關介紹 及 CRUD (下)</div></div></a></div><div><a href="/2022/10/28/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AModel-%E9%97%9C%E8%81%AF%E6%80%A7-N-N%EF%BC%89/" title="進入Rails世界必須懂：Model 關聯性 (N:N）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-28</div><div class="title">進入Rails世界必須懂：Model 關聯性 (N:N）</div></div></a></div><div><a href="/2022/10/27/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AModel-%E9%97%9C%E8%81%AF%E6%80%A7-1-N/" title="進入Rails世界必須懂：Model 關聯性 (1:N)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-27</div><div class="title">進入Rails世界必須懂：Model 關聯性 (1:N)</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 評論</span></div></div><div class="comment-wrap"><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目錄</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Controller-%E8%88%87-V-iew-%E6%98%AF%E4%BB%80%E9%BA%BC%E5%91%A2%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">Controller 與 Ｖ iew 是什麼呢？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%92%8C%E8%B7%AF%E5%BE%91%E8%A8%AD%E5%AE%9A%E7%9A%84%E9%97%9C%E8%81%AF"><span class="toc-number">2.</span> <span class="toc-text">和路徑設定的關聯</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B-controller"><span class="toc-number">3.</span> <span class="toc-text">建立 controller</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%92%B0%E5%AF%AB-action-%E5%B0%8D%E6%87%89%E5%88%B0-view-%E5%8E%BB%E5%90%A7"><span class="toc-number">4.</span> <span class="toc-text">撰寫 action 對應到 view 去吧</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#action-%E5%BB%BA%E7%AB%8B"><span class="toc-number">4.1.</span> <span class="toc-text">action 建立</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#view-%E5%BB%BA%E7%AB%8B"><span class="toc-number">4.2.</span> <span class="toc-text">view 建立</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%9C%A8-view-%E4%B8%8A%E9%9D%A2%E7%9C%8B%E5%88%B0-controller-%E5%82%B3%E9%81%9E%E7%9A%84%E5%8F%83%E6%95%B8"><span class="toc-number">5.</span> <span class="toc-text">如何在 view 上面看到 controller 傳遞的參數</span></a></li></ol></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2024 By Sean</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主題 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="淺色和深色模式轉換"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="單欄和雙欄切換"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="設定"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目錄"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直達評論"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="返回頂部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'https://oseanchen.github.io/2022/10/18/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AController-%E5%8F%8A-View/'
+    this.page.identifier = '/2022/10/18/Rails/%E9%80%B2%E5%85%A5Rails%E4%B8%96%E7%95%8C%E5%BF%85%E9%A0%88%E6%87%82%EF%BC%9AController-%E5%8F%8A-View/'
+    this.page.title = '進入Rails世界必須懂：Controller 及 View'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://https-oseanchen-github-io.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=https-oseanchen-github-io&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Disqus' === 'Disqus' || !true) {
+    if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜尋</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  資料庫載入中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜尋文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
