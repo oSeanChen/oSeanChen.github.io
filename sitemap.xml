@@ -425,6 +425,13 @@
 
   
   <url>
+    <loc>https://oseanchen.github.io/tags/Java/</loc>
+    <lastmod>2024-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://oseanchen.github.io/tags/Ruby/</loc>
     <lastmod>2024-09-14</lastmod>
     <changefreq>weekly</changefreq>
@@ -502,6 +509,20 @@
   </url>
   
   <url>
+    <loc>https://oseanchen.github.io/tags/Design-Pattern/</loc>
+    <lastmod>2024-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://oseanchen.github.io/tags/Cronjob/</loc>
+    <lastmod>2024-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://oseanchen.github.io/tags/http-request/</loc>
     <lastmod>2024-09-14</lastmod>
     <changefreq>weekly</changefreq>
@@ -537,13 +558,6 @@
   </url>
   
   <url>
-    <loc>https://oseanchen.github.io/tags/%E7%B6%B2%E8%B7%AF/</loc>
-    <lastmod>2024-09-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://oseanchen.github.io/tags/RabbitMQ/</loc>
     <lastmod>2024-09-14</lastmod>
     <changefreq>weekly</changefreq>
@@ -559,13 +573,6 @@
   
   <url>
     <loc>https://oseanchen.github.io/tags/Asynchronous/</loc>
-    <lastmod>2024-09-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://oseanchen.github.io/tags/Java/</loc>
     <lastmod>2024-09-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -593,14 +600,7 @@
   </url>
   
   <url>
-    <loc>https://oseanchen.github.io/tags/Design-Pattern/</loc>
-    <lastmod>2024-09-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://oseanchen.github.io/tags/Cronjob/</loc>
+    <loc>https://oseanchen.github.io/tags/%E7%B6%B2%E8%B7%AF/</loc>
     <lastmod>2024-09-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -609,7 +609,28 @@
 
   
   <url>
+    <loc>https://oseanchen.github.io/categories/Java-Basic/</loc>
+    <lastmod>2024-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://oseanchen.github.io/categories/Rails%E5%A5%97%E4%BB%B6/</loc>
+    <lastmod>2024-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://oseanchen.github.io/categories/Rails%E5%9F%BA%E7%A4%8E/</loc>
+    <lastmod>2024-09-14</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://oseanchen.github.io/categories/Java-Basic/Spring-Boot/</loc>
     <lastmod>2024-09-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -637,28 +658,7 @@
   </url>
   
   <url>
-    <loc>https://oseanchen.github.io/categories/%E7%B6%B2%E8%B7%AF%E6%A6%82%E5%BF%B5/</loc>
-    <lastmod>2024-09-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://oseanchen.github.io/categories/Rails%E5%9F%BA%E7%A4%8E/</loc>
-    <lastmod>2024-09-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://oseanchen.github.io/categories/RabbitMQ/</loc>
-    <lastmod>2024-09-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://oseanchen.github.io/categories/Java-Basic/</loc>
     <lastmod>2024-09-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -672,7 +672,7 @@
   </url>
   
   <url>
-    <loc>https://oseanchen.github.io/categories/Java-Basic/Spring-Boot/</loc>
+    <loc>https://oseanchen.github.io/categories/%E7%B6%B2%E8%B7%AF%E6%A6%82%E5%BF%B5/</loc>
     <lastmod>2024-09-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
