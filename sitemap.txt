@@ -1,3 +1,4 @@
+https://oseanchen.github.io/2024/02/21/SpringBoot/Spring-Boot-IOC-and-DI/
 https://oseanchen.github.io/2024/09/15/Spring-Boot-%E4%BB%8B%E7%B4%B9/
 https://oseanchen.github.io/2023/08/23/%E7%B7%A8%E7%A2%BC-encoding-vs-%E5%8A%A0%E8%A7%A3%E5%AF%86-vs-%E9%9B%9C%E6%B9%8A-Hash/
 https://oseanchen.github.io/2024/09/14/SpringBoot/Spring-Security-FilterChain-%E5%A6%82%E4%BD%95%E9%80%B2%E8%A1%8C%E7%99%BB%E5%85%A5%E8%AA%8D%E8%AD%89/
@@ -8,7 +9,6 @@ https://oseanchen.github.io/about/index.html
 https://oseanchen.github.io/2024/04/10/SpringBoot/Spring-AOP/
 https://oseanchen.github.io/2024/05/14/SpringBoot/Spring-Boot-Scheduled/
 https://oseanchen.github.io/2023/03/25/SpringBoot/Spring-Boot-http-method-%E5%8F%96%E5%BE%97%E8%AB%8B%E6%B1%82%E5%8F%83%E6%95%B8%E6%96%B9%E6%B3%95/
-https://oseanchen.github.io/2024/02/21/SpringBoot/Spring-Boot-IOC-and-DI/
 https://oseanchen.github.io/2024/02/16/SpringBoot/JPA,%20JDBC,%20Hibernate/
 https://oseanchen.github.io/2022/08/28/Rails/Rails%E5%A5%97%E4%BB%B6%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97%EF%BC%8CDevise%20(helper%E4%BD%BF%E7%94%A8%E3%80%81%E6%96%B0%E5%A2%9E%E6%AC%84%E4%BD%8D%E5%8F%8A%E9%A9%97%E8%AD%89%E3%80%81i18n)/
 https://oseanchen.github.io/2022/11/02/Rails/Rails-%E5%A5%97%E4%BB%B6%E6%93%8D%E4%BD%9C%EF%BC%8CDevise%EF%BC%88google-%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%85%A5%EF%BC%88%E4%B8%8B%EF%BC%89/
