@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>Spring Boot 介紹</title>
+      <link href="/2024/09/15/Spring-Boot-%E4%BB%8B%E7%B4%B9/"/>
+      <url>/2024/09/15/Spring-Boot-%E4%BB%8B%E7%B4%B9/</url>
+      
+        <content type="html"><![CDATA[<h2 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h2><p>是 <strong>Java 最主流的後端開發框架</strong>，<strong>Spring Boot 其實算是早期的框架 Spring 的擴充升級</strong>，其核心的概念都有延續。過往框架 Spring 配置繁瑣，為跟上其他語言的框架，像是 Python (Django), PHP (Laravel) 等主流框架簡化配置的設計，所以才衍伸出 Spring Boot 快速整合管理 Spring 底下的各類模組 (Spring Data, Spring Security, Spring AOP、Spring MVC… ) 來達到快速開發。</p><p>主要框架核心概念就是<strong>控制反轉 (Inversion Of Control)</strong> 及 <strong>依賴注入 (Dependency Injection)</strong> 來達到解耦，減少程式碼之間的依賴性，增加開發彈性，詳細的說明請見 <a href="https://oseanchen.github.io/2024/02/21/SpringBoot/Spring-Boot-IOC-and-DI/">Spring Boot IOC and DI</a>。</p><p>Spring Boot 在啟動時，會執行元件掃描（component scan），找出具有元件標記的類別（如 @RestController、@Service、@Component），建立成元件（bean），並且將這些 bean 放入 Spring 的容器中統一管理。由於元件的物件實體不需要自己寫程式創建 (new) 出來，而是交給框架的容器機制來建立，所以 Spring 融入了 IOC 的精神。</p><h2 id="特色"><a href="#特色" class="headerlink" title="特色"></a>特色</h2><ul><li><strong>約定優於配置</strong>: 簡化開發採用許多預設值來配置應用程式，這些預設值可節省開發人員的時間和精力，改善 Java 傳統 Spring 框架通常需要在配置文件 (xml) 中進行大量的手動配置。</li><li><strong>簡單的開發</strong>：提供快速開發工具，如 Spring Initializr，可快速構建一個基本的 Spring Boot 應用程式，減少模組套件引用及專案建立時的配置，也整合 Maven 或 Grandle 等專案管理套件更加提升開發效率。</li><li><strong>嵌入式伺服器</strong>：提供嵌入式的 Tomcat、Jetty、Undertow、Netty，使開發者可以打包一個 JAR 檔案，直接運行，而不需要外部的應用伺服器。</li><li><strong>開箱即用</strong>：內建許多功能及配置，如資料庫連接、安全性、日誌紀錄和許多第三方庫的支持等。這些功能使得開發人員可以更快速地構建應用程式，而不必花費太多時間來處理底層細節。</li><li><strong>微服務整合</strong>：可輕鬆整合 Spring Cloud 框架來實現服務發現、負載均衡和數據處理等功能。</li></ul><hr><p>Ref:</p><ul><li><a href="https://spring.io/projects/spring-boot">Spring.io</a></li><li><a href="https://kucw.io/doc/springboot/1/">古古的後端筆記 - SpringBoot 簡介</a></li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> Spring Boot </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Spring Boot </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Spring Security FilterChain 如何進行登入認證</title>
       <link href="/2024/09/14/SpringBoot/Spring-Security-FilterChain-%E5%A6%82%E4%BD%95%E9%80%B2%E8%A1%8C%E7%99%BB%E5%85%A5%E8%AA%8D%E8%AD%89/"/>
       <url>/2024/09/14/SpringBoot/Spring-Security-FilterChain-%E5%A6%82%E4%BD%95%E9%80%B2%E8%A1%8C%E7%99%BB%E5%85%A5%E8%AA%8D%E8%AD%89/</url>
