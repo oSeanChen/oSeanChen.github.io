@@ -1,3 +1,4 @@
+https://oseanchen.github.io/2024/09/21/SpringBoot/Spring-Boot-Bean-%E4%BB%8B%E7%B4%B9%E5%8F%8A%E5%B8%B8%E8%A6%8B%E6%87%89%E7%94%A8/
 https://oseanchen.github.io/2024/09/27/Spring-Data-JPA-%EF%BC%884%EF%BC%89%E8%B3%87%E6%96%99%E5%BA%AB%E9%97%9C%E8%81%AF-1-N/
 https://oseanchen.github.io/2024/09/24/Spring-Data-JPA-%EF%BC%881%EF%BC%89%E5%9F%BA%E7%A4%8E%E6%87%89%E7%94%A8%E6%9E%B6%E6%A7%8B/
 https://oseanchen.github.io/2024/09/25/Spring-Data-JPA-%EF%BC%882%EF%BC%89%E8%B3%87%E6%96%99%E5%BA%AB%E6%9F%A5%E8%A9%A2%E6%87%89%E7%94%A8/
@@ -6,7 +7,6 @@ https://oseanchen.github.io/2024/02/16/SpringBoot/JPA,%20JDBC,%20Hibernate/
 https://oseanchen.github.io/2024/09/22/Spring-MVC-%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%B4%B9/
 https://oseanchen.github.io/2024/09/22/Spring-MVC-Thymeleaf/
 https://oseanchen.github.io/2024/09/23/Spring-Data-JPA-JDBC-Template-Mybatis-%E6%AF%94%E8%BC%83/
-https://oseanchen.github.io/2024/09/21/SpringBoot/Spring-Boot-Bean-%E4%BB%8B%E7%B4%B9%E5%8F%8A%E5%B8%B8%E8%A6%8B%E6%87%89%E7%94%A8/
 https://oseanchen.github.io/2024/09/15/SpringBoot/Spring-Boot-%E4%BB%8B%E7%B4%B9/
 https://oseanchen.github.io/2023/03/25/SpringBoot/Spring-MVC-Http-method-%E5%8F%96%E5%BE%97%E8%AB%8B%E6%B1%82%E5%8F%83%E6%95%B8%E6%96%B9%E6%B3%95/
 https://oseanchen.github.io/2024/09/21/%E5%B0%88%E6%A1%88%E7%AE%A1%E7%90%86-Maven/
