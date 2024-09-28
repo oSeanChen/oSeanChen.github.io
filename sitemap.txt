@@ -1,5 +1,7 @@
+https://oseanchen.github.io/2024/09/27/Spring-Data-JPA-%EF%BC%884%EF%BC%89%E8%B3%87%E6%96%99%E5%BA%AB%E9%97%9C%E8%81%AF-1-N/
 https://oseanchen.github.io/2024/09/24/Spring-Data-JPA-%EF%BC%881%EF%BC%89%E5%9F%BA%E7%A4%8E%E6%87%89%E7%94%A8%E6%9E%B6%E6%A7%8B/
 https://oseanchen.github.io/2024/09/25/Spring-Data-JPA-%EF%BC%882%EF%BC%89%E8%B3%87%E6%96%99%E5%BA%AB%E6%9F%A5%E8%A9%A2%E6%87%89%E7%94%A8/
+https://oseanchen.github.io/2024/09/27/Spring-Data-JPA-%EF%BC%883%EF%BC%89%E8%B3%87%E6%96%99%E5%BA%AB%E9%97%9C%E8%81%AF-1-1/
 https://oseanchen.github.io/2024/02/16/SpringBoot/JPA,%20JDBC,%20Hibernate/
 https://oseanchen.github.io/2024/09/22/Spring-MVC-%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%B4%B9/
 https://oseanchen.github.io/2024/09/22/Spring-MVC-Thymeleaf/
@@ -83,6 +85,7 @@ https://oseanchen.github.io/tags/Maven/
 https://oseanchen.github.io/tags/Thymeleaf/
 https://oseanchen.github.io/tags/ORM/
 https://oseanchen.github.io/tags/Database/
+https://oseanchen.github.io/tags/Spring-Data-Jpa/
 https://oseanchen.github.io/categories/Java-Basic/
 https://oseanchen.github.io/categories/Rails%E5%A5%97%E4%BB%B6/
 https://oseanchen.github.io/categories/Rails%E5%9F%BA%E7%A4%8E/
