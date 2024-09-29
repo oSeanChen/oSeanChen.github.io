@@ -1,3 +1,4 @@
+https://oseanchen.github.io/2024/04/10/SpringBoot/Spring-AOP/
 https://oseanchen.github.io/2024/09/21/SpringBoot/Spring-Boot-Bean-%E4%BB%8B%E7%B4%B9%E5%8F%8A%E5%B8%B8%E8%A6%8B%E6%87%89%E7%94%A8/
 https://oseanchen.github.io/2024/09/27/Spring-Data-JPA-%EF%BC%884%EF%BC%89%E8%B3%87%E6%96%99%E5%BA%AB%E9%97%9C%E8%81%AF-1-N/
 https://oseanchen.github.io/2024/09/24/Spring-Data-JPA-%EF%BC%881%EF%BC%89%E5%9F%BA%E7%A4%8E%E6%87%89%E7%94%A8%E6%9E%B6%E6%A7%8B/
@@ -17,7 +18,6 @@ https://oseanchen.github.io/2023/05/10/SpringBoot/Spring-restTemplate-%E4%BD%BF%
 https://oseanchen.github.io/tags/index.html
 https://oseanchen.github.io/categories/index.html
 https://oseanchen.github.io/about/index.html
-https://oseanchen.github.io/2024/04/10/SpringBoot/Spring-AOP/
 https://oseanchen.github.io/2024/05/14/SpringBoot/Spring-Boot-Scheduled/
 https://oseanchen.github.io/2022/08/28/Rails/Rails%E5%A5%97%E4%BB%B6%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97%EF%BC%8CDevise%20(helper%E4%BD%BF%E7%94%A8%E3%80%81%E6%96%B0%E5%A2%9E%E6%AC%84%E4%BD%8D%E5%8F%8A%E9%A9%97%E8%AD%89%E3%80%81i18n)/
 https://oseanchen.github.io/2022/11/02/Rails/Rails-%E5%A5%97%E4%BB%B6%E6%93%8D%E4%BD%9C%EF%BC%8CDevise%EF%BC%88google-%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%85%A5%EF%BC%88%E4%B8%8B%EF%BC%89/
