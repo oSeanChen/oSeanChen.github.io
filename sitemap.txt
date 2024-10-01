@@ -1,3 +1,4 @@
+https://oseanchen.github.io/2023/05/10/SpringBoot/Spring-restTemplate-%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/
 https://oseanchen.github.io/2024/09/30/Lombok/
 https://oseanchen.github.io/2024/09/27/SpringBoot/Spring-Data-JPA-%EF%BC%884%EF%BC%89%E8%B3%87%E6%96%99%E5%BA%AB%E9%97%9C%E8%81%AF-1-N/
 https://oseanchen.github.io/2024/09/27/SpringBoot/Spring-Data-JPA-%EF%BC%883%EF%BC%89%E8%B3%87%E6%96%99%E5%BA%AB%E9%97%9C%E8%81%AF-1-1/
@@ -20,7 +21,6 @@ https://oseanchen.github.io/2024/09/21/SpringBoot/%E5%B0%88%E6%A1%88%E7%AE%A1%E7
 https://oseanchen.github.io/2024/02/21/SpringBoot/Spring-Boot-IOC-and-DI/
 https://oseanchen.github.io/2023/08/23/%E7%B7%A8%E7%A2%BC-encoding-vs-%E5%8A%A0%E8%A7%A3%E5%AF%86-vs-%E9%9B%9C%E6%B9%8A-Hash/
 https://oseanchen.github.io/2024/09/14/SpringBoot/Spring-Security-FilterChain-%E5%A6%82%E4%BD%95%E9%80%B2%E8%A1%8C%E7%99%BB%E5%85%A5%E8%AA%8D%E8%AD%89/
-https://oseanchen.github.io/2023/05/10/SpringBoot/Spring-restTemplate-%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/
 https://oseanchen.github.io/tags/index.html
 https://oseanchen.github.io/categories/index.html
 https://oseanchen.github.io/about/index.html
