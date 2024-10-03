@@ -1,0 +1,424 @@
+<!DOCTYPE html><html lang="zh-TW" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Spring Boot Bean 介紹及常見應用 | Sean's Blog</title><meta name="author" content="Sean"><meta name="copyright" content="Sean"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#000"><meta name="description" content="Spring Bean (註解 Annotation)由 Spring IoC 容器管理的對象稱為 Bean 。Bean 是由 Spring IoC 容器實例化、組裝和管理的對象。應用 Annotation 可以將一個物件註冊成為 Bean。 使用 Annotation 的好處:  只要在任意的 c"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://oseanchen.github.io/2024/09/21/SpringBoot/Spring-Boot-Bean-%E4%BB%8B%E7%B4%B9%E5%8F%8A%E5%B8%B8%E8%A6%8B%E6%87%89%E7%94%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="sy_aItoBmo7s6Mb8wbh97IV_N4jjnUXRzwBNb4brupA"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查詢的內容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '複製成功',
+    error: '複製錯誤',
+    noSupport: '瀏覽器不支援'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '剛剛',
+    min: '分鐘前',
+    hour: '小時前',
+    day: '天前',
+    month: '個月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '載入更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Spring Boot Bean 介紹及常見應用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-09-29 00:37:19'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/profile.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">54</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">32</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">11</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-user"></i><span> 關於我</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 歸檔</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Sean's Blog"><span class="site-name">Sean's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜尋</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-user"></i><span> 關於我</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 歸檔</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Spring Boot Bean 介紹及常見應用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">發表於</span><time class="post-meta-date-created" datetime="2024-09-21T05:44:05.000Z" title="發表於 2024-09-21 13:44:05">2024-09-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新於</span><time class="post-meta-date-updated" datetime="2024-09-28T16:37:19.957Z" title="更新於 2024-09-29 00:37:19">2024-09-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Spring-Boot/">Spring Boot</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Spring Boot Bean 介紹及常見應用"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Spring-Bean-註解-Annotation"><a href="#Spring-Bean-註解-Annotation" class="headerlink" title="Spring Bean (註解 Annotation)"></a>Spring Bean (註解 Annotation)</h1><p>由 Spring IoC 容器管理的對象稱為 Bean 。Bean 是由 Spring IoC 容器實例化、組裝和管理的對象。應用 Annotation 可以將一個物件註冊成為 Bean。</p>
+<p>使用 Annotation 的好處:</p>
+<ul>
+<li>只要在任意的 class 開頭定義好，Spring 啟動後就會自動去找，不需要一個一個匯入</li>
+<li>名稱就可以對應該 Class 要做甚麼或是被引入甚麼套件</li>
+<li>Spring 會自動根據 Annotation 去將該 class 設定成特定的用途或是引入特定套件。</li>
+</ul>
+<h2 id="依照不同應用層面分類"><a href="#依照不同應用層面分類" class="headerlink" title="依照不同應用層面分類:"></a>依照不同應用層面分類:</h2><h3 id="1-配置與啟動"><a href="#1-配置與啟動" class="headerlink" title="1. 配置與啟動"></a>1. <strong>配置與啟動</strong></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>@SpringBootApplication</code>：<ul>
+<li>結合了 <code>@Configuration</code>、<code>@EnableAutoConfiguration</code> 和 <code>@ComponentScan</code>，是啟動 Spring Boot 應用的核心註解。</li>
+</ul>
+</li>
+<li><code>@Configuration</code>：<ul>
+<li>標記一個類為配置類，通常用來定義 <code>@Bean</code> 方法。</li>
+</ul>
+</li>
+<li><code>@ComponentScan</code>：<ul>
+<li>自動掃描並註冊被 <code>@Component</code>、<code>@Service</code>、<code>@Repository</code> 等註解的類別，通常在 <code>@SpringBootApplication</code> 中已隱式配置。</li>
+</ul>
+</li>
+<li><code>@EnableAutoConfiguration</code>：<ul>
+<li>讓 Spring Boot 根據加入的依賴自動配置 Spring 應用程式，通常已被包含在 <code>@SpringBootApplication</code> 中。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-依賴注入-DI"><a href="#2-依賴注入-DI" class="headerlink" title="2. 依賴注入 (DI)"></a>2. <strong>依賴注入 (DI)</strong></h3><ul>
+<li><code>@Component</code>：<ul>
+<li>標記一個類別為 Spring 管理的組件（Bean），會自動加入到 Spring 容器中。</li>
+</ul>
+</li>
+<li><code>@Service</code>：<ul>
+<li><code>@Component</code>的一種，表示 Service 業務邏輯層的類別。</li>
+</ul>
+</li>
+<li><code>@Repository</code>：<ul>
+<li><code>@Component</code>的一種，表示 Dao 資料存取層的類別，並且會自動處理資料庫例外。</li>
+</ul>
+</li>
+<li><code>@Controller</code>：<ul>
+<li><code>@Component</code>的一種， 表示 Controller 端口控制層的類別，包含資料取得或是配合前端模板 Thymeleaf 等前端頁面呈現。</li>
+</ul>
+</li>
+<li><code>@Autowired</code>：<ul>
+<li>自動注入 Bean，各類別內部要使用已經註冊的 bean 就可以注入使用</li>
+</ul>
+</li>
+<li><code>@Bean</code><ul>
+<li>針對方法類進行 bean 注冊</li>
+</ul>
+</li>
+<li><code>@Value</code>：<ul>
+<li>用來注入配置檔中的值，通常從 <code>application.properties</code> 或 <code>application.yml</code> 中獲取。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-Web-與-RESTful-API"><a href="#3-Web-與-RESTful-API" class="headerlink" title="3. Web 與 RESTful API"></a>3. <strong>Web 與 RESTful API</strong></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>@RestController</code>：<ul>
+<li>結合了 <code>@Controller</code> 和 <code>@ResponseBody</code>，表示這個類別是 RESTful Controller，方法返回的資料會直接轉換成 JSON 或 XML，用於純資料取得的 API 端口。</li>
+</ul>
+</li>
+<li><code>@RequestMapping</code>：<ul>
+<li>定義 Controller 中的 URL 規則，可以用於類別或方法上。也可以用更具體的註解如 <code>@GetMapping</code>, <code>@PostMapping</code>, <code>@PutMapping</code>, <code>@DeleteMapping</code> 來指定 HTTP 方法。</li>
+</ul>
+</li>
+<li><code>@PathVariable</code>：<ul>
+<li>用來擷取 URL 路徑中的參數，通常用在動態路徑中。</li>
+</ul>
+</li>
+<li><code>@RequestParam</code>：<ul>
+<li>用來擷取 URL 中的查詢參數或表單資料。</li>
+</ul>
+</li>
+<li><code>@RequestBody</code>：<ul>
+<li>用來將 HTTP 請求的 JSON 或 XML 資料直接轉換為 Java 物件，通常用於 POST&#x2F;PUT 請求。</li>
+</ul>
+</li>
+<li><code>@ResponseBody</code>：<ul>
+<li>將方法的返回值直接轉換為 JSON 或 XML 並返回給前端，適合 RESTful API。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-ORM-資料庫操作"><a href="#4-ORM-資料庫操作" class="headerlink" title="4. ORM, 資料庫操作"></a>4. ORM, <strong>資料庫操作</strong></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-jpa<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>@Entity</code>：<ul>
+<li>標記一個類別為 JPA 實體，代表資料庫中的一個表格。</li>
+</ul>
+</li>
+<li><code>@Table</code>：<ul>
+<li>用來指定實體對應的資料表名稱，若不指定，預設會使用類名作為表名。</li>
+</ul>
+</li>
+<li><code>@Id</code>：<ul>
+<li>指定實體的主鍵欄位。</li>
+</ul>
+</li>
+<li><code>@GeneratedValue</code>：<ul>
+<li>指定主鍵的生成策略，常見的有 <code>IDENTITY</code>、<code>SEQUENCE</code> 等。</li>
+</ul>
+</li>
+<li><code>@Column</code>：<ul>
+<li>用來定義實體中屬性對應的資料庫欄位，包含名稱、長度等設定。</li>
+</ul>
+</li>
+<li><code>@Repository</code>：<ul>
+<li>用於標記資料存取層，搭配 Spring Data JPA 時，可以自動生成 CRUD 操作。</li>
+</ul>
+</li>
+<li><code>@Query</code>：<ul>
+<li>自定義查詢語句，適合需要複雜查詢的情境。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-AOP-與異常處理"><a href="#5-AOP-與異常處理" class="headerlink" title="5. AOP 與異常處理"></a>5. <strong>AOP 與異常處理</strong></h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>@Aspect</code>：<ul>
+<li>定義切面類別，用來實現橫切關注點。</li>
+</ul>
+</li>
+<li><code>@Before</code>、<code>@After</code>、<code>@Around</code>：<ul>
+<li>用來在方法執行的前、後或周圍插入額外的邏輯。</li>
+</ul>
+</li>
+<li><code>@ExceptionHandler</code>：<ul>
+<li>用於定義控制器中的異常處理方法。</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-其他常用註解"><a href="#6-其他常用註解" class="headerlink" title="6. 其他常用註解"></a>6. <strong>其他常用註解</strong></h3><ul>
+<li><code>@Valid</code>, <code>@Validated</code>：<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-validation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>用於啟動 Bean 驗證，可限制參數或內部屬性輸入長度或是格式等等，通常和 <code>@RequestBody</code> 或 <code>@RequestParam</code> 搭配使用。</li>
+</ul>
+</li>
+</ul>
+<p>Ref:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Java%E6%B3%A8%E8%A7%A3">Java 注解</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@maskwork77.dev/prepare-2631b972c1f8">Java — Spring Annotation</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://oseanchen.github.io">Sean</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章連結: </span><span class="post-copyright-info"><a href="https://oseanchen.github.io/2024/09/21/SpringBoot/Spring-Boot-Bean-%E4%BB%8B%E7%B4%B9%E5%8F%8A%E5%B8%B8%E8%A6%8B%E6%87%89%E7%94%A8/">https://oseanchen.github.io/2024/09/21/SpringBoot/Spring-Boot-Bean-%E4%BB%8B%E7%B4%B9%E5%8F%8A%E5%B8%B8%E8%A6%8B%E6%87%89%E7%94%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版權聲明: </span><span class="post-copyright-info">本部落格所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 許可協議。轉載請註明來自 <a href="https://oseanchen.github.io" target="_blank">Sean's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a><a class="post-meta__tags" href="/tags/Spring-Boot/">Spring Boot</a></div><div class="post_share"><div class="social-share" data-image="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" data-sites="facebook,twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2024/09/15/SpringBoot/Spring-Boot-%E4%BB%8B%E7%B4%B9/" title="Spring Boot 介紹"><img class="cover" src="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Spring Boot 介紹</div></div></a></div><div class="next-post pull-right"><a href="/2024/09/21/SpringBoot/%E5%B0%88%E6%A1%88%E7%AE%A1%E7%90%86-Maven/" title="專案管理 Maven"><img class="cover" src="https://logowik.com/content/uploads/images/maven-apache3537.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">專案管理 Maven</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相關推薦</span></div><div class="relatedPosts-list"><div><a href="/2024/02/16/SpringBoot/JPA,%20JDBC,%20Hibernate/" title="JPA, JDBC, Hibernate"><img class="cover" src="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-02-16</div><div class="title">JPA, JDBC, Hibernate</div></div></a></div><div><a href="/2024/04/10/SpringBoot/Spring-AOP/" title="Spring AOP"><img class="cover" src="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-10</div><div class="title">Spring AOP</div></div></a></div><div><a href="/2024/05/14/SpringBoot/Spring-Boot-Scheduled/" title="Spring Boot Scheduled"><img class="cover" src="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-05-14</div><div class="title">Spring Boot Scheduled</div></div></a></div><div><a href="/2023/05/10/SpringBoot/Spring-restTemplate-%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/" title="Spring restTemplate 使用方法"><img class="cover" src="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-05-10</div><div class="title">Spring restTemplate 使用方法</div></div></a></div><div><a href="/2024/09/15/SpringBoot/Spring-Boot-%E4%BB%8B%E7%B4%B9/" title="Spring Boot 介紹"><img class="cover" src="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-15</div><div class="title">Spring Boot 介紹</div></div></a></div><div><a href="/2023/03/25/SpringBoot/Spring-MVC-Http-method-%E5%8F%96%E5%BE%97%E8%AB%8B%E6%B1%82%E5%8F%83%E6%95%B8%E6%96%B9%E6%B3%95/" title="Spring MVC Http method 取得請求參數方法"><img class="cover" src="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2023-03-25</div><div class="title">Spring MVC Http method 取得請求參數方法</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 評論</span></div><div class="comment-switch"><span class="first-comment">Giscus</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目錄</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-Bean-%E8%A8%BB%E8%A7%A3-Annotation"><span class="toc-text">Spring Bean (註解 Annotation)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E7%85%A7%E4%B8%8D%E5%90%8C%E6%87%89%E7%94%A8%E5%B1%A4%E9%9D%A2%E5%88%86%E9%A1%9E"><span class="toc-text">依照不同應用層面分類:</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%85%8D%E7%BD%AE%E8%88%87%E5%95%9F%E5%8B%95"><span class="toc-text">1. 配置與啟動</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BE%9D%E8%B3%B4%E6%B3%A8%E5%85%A5-DI"><span class="toc-text">2. 依賴注入 (DI)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-Web-%E8%88%87-RESTful-API"><span class="toc-text">3. Web 與 RESTful API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-ORM-%E8%B3%87%E6%96%99%E5%BA%AB%E6%93%8D%E4%BD%9C"><span class="toc-text">4. ORM, 資料庫操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-AOP-%E8%88%87%E7%95%B0%E5%B8%B8%E8%99%95%E7%90%86"><span class="toc-text">5. AOP 與異常處理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E5%85%B6%E4%BB%96%E5%B8%B8%E7%94%A8%E8%A8%BB%E8%A7%A3"><span class="toc-text">6. 其他常用註解</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png')"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2024 By Sean</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主題 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="淺色和深色模式轉換"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="單欄和雙欄切換"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="設定"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目錄"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直達評論"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="返回頂部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'oSeanChen/oSeanChen.github.io',
+      'data-repo-id': 'R_kgDOH0K4Aw',
+      'data-category-id': 'DIC_kwDOH0K4A84Ciek0',
+      'data-mapping': 'pathname',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },{"data-mapping":"title","data-strict":1,"data-input-position":"top"})
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Giscus' === 'Giscus' || !true) {
+    if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment= loadGiscus
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'https://oseanchen.github.io/2024/09/21/SpringBoot/Spring-Boot-Bean-%E4%BB%8B%E7%B4%B9%E5%8F%8A%E5%B8%B8%E8%A6%8B%E6%87%89%E7%94%A8/'
+    this.page.identifier = '/2024/09/21/SpringBoot/Spring-Boot-Bean-%E4%BB%8B%E7%B4%B9%E5%8F%8A%E5%B8%B8%E8%A6%8B%E6%87%89%E7%94%A8/'
+    this.page.title = 'Spring Boot Bean 介紹及常見應用'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://https-oseanchen-github-io.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=https-oseanchen-github-io&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Giscus' === 'Disqus' || !true) {
+    if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜尋</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  資料庫載入中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜尋文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

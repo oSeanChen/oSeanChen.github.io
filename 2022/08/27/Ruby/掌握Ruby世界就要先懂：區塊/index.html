@@ -1,0 +1,329 @@
+<!DOCTYPE html><html lang="zh-TW" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>掌握Ruby世界就要先懂：區塊 | Sean's Blog</title><meta name="author" content="Sean"><meta name="copyright" content="Sean"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#000"><meta name="description" content="在 Ruby 世界中有著區塊(本篇將稱 block)的特殊語法，跟語言的執行程序上有大大的關聯，今天就來好好跟大家介紹這些部分吧!   區塊 Block前面有跟大家說到 ruby 幾乎甚麼都是物件，但唯獨 block 這個東西他不能算是物件，而block 在 ruby 中有兩種：   {} 之內 d"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://oseanchen.github.io/2022/08/27/Ruby/%E6%8E%8C%E6%8F%A1Ruby%E4%B8%96%E7%95%8C%E5%B0%B1%E8%A6%81%E5%85%88%E6%87%82%EF%BC%9A%E5%8D%80%E5%A1%8A/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="sy_aItoBmo7s6Mb8wbh97IV_N4jjnUXRzwBNb4brupA"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查詢的內容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '複製成功',
+    error: '複製錯誤',
+    noSupport: '瀏覽器不支援'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '剛剛',
+    min: '分鐘前',
+    hour: '小時前',
+    day: '天前',
+    month: '個月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '載入更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '掌握Ruby世界就要先懂：區塊',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-08-24 01:20:11'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/profile.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">54</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">32</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">11</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-user"></i><span> 關於我</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 歸檔</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/7212.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Sean's Blog"><span class="site-name">Sean's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜尋</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-user"></i><span> 關於我</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 歸檔</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">掌握Ruby世界就要先懂：區塊</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">發表於</span><time class="post-meta-date-created" datetime="2022-08-27T07:15:19.000Z" title="發表於 2022-08-27 15:15:19">2022-08-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新於</span><time class="post-meta-date-updated" datetime="2023-08-23T17:20:11.146Z" title="更新於 2023-08-24 01:20:11">2023-08-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Ruby%E5%9F%BA%E7%A4%8E/">Ruby基礎</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="掌握Ruby世界就要先懂：區塊"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><div class="note simple"><p>在 Ruby 世界中有著區塊(本篇將稱 block)的特殊語法，跟語言的執行程序上有大大的關聯，今天就來好好跟大家介紹這些部分吧!</p>
+</div>
+
+<h2 id="區塊-Block"><a href="#區塊-Block" class="headerlink" title="區塊 Block"></a>區塊 Block</h2><p>前面有跟大家說到 ruby 幾乎甚麼都是物件，但唯獨 block 這個東西他不能算是物件，而<br>block 在 ruby 中有兩種：</p>
+<blockquote>
+<ul>
+<li>{} 之內</li>
+<li>do…end 的範圍內</li>
+</ul>
+</blockquote>
+<h3 id="Block-的特性"><a href="#Block-的特性" class="headerlink" title="Block 的特性"></a>Block 的特性</h3><p>總結有以下的特性：</p>
+<blockquote>
+<ul>
+<li>一段不會被主動執行的程式碼</li>
+<li>不是物件</li>
+<li>像寄生蟲一樣需要依附在某些方法或物件，且不是參數<br>Block 會不會執行，要看宿主臉色，<strong>是否有 yield</strong></li>
+</ul>
+</blockquote>
+<p>可以看下面的例子，我們定義一個吃東西的方法，food 是參數，下面的兩種 block 類型其實都不會被執行，既使看起來有被呼叫到，就像我們上面說的特性，不會被主動執行，也不是參數。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">eat_something</span>(<span class="params">food</span>)</span><br><span class="line">  <span class="comment"># eat something here</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">eat_something(rice) &#123;</span><br><span class="line">  puts <span class="string">&quot;Block在這&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 或是 do ... end 寫法</span></span><br><span class="line">eat_something(<span class="string">&quot;noodle&quot;</span>) <span class="keyword">do</span></span><br><span class="line">  puts <span class="string">&quot;這裡也是Block&quot;</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="如何執行-yield-控制權轉讓"><a href="#如何執行-yield-控制權轉讓" class="headerlink" title="如何執行? (yield 控制權轉讓)"></a>如何執行? (yield 控制權轉讓)</h3><p>不知道大家有沒有在馬路上看過這樣的標誌?</p>
+<p><img src="https://i.imgur.com/5xb2r4M.png"></p>
+<p>大家應該知道這樣的號誌出現就是行車要禮讓行人的路口，等行人過去之後才能繼續前進。<br>其實 block 的運作就是像是這樣的情境喔!!<br>當出現 yield 的時候，區塊內的程式碼就會馬上被執行，而這樣的狀況其實是<strong>控制權的轉讓</strong>，當執行完成後再交出控制權回去依序執行剩下的程式碼。</p>
+<p>舉個例子來說：<br>下面個別字串後面括號的順序就是執行的順序喔! 可以看到 yield 表示將控制權交給 block { } 內的程式碼</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">drive_car</span></span><br><span class="line">  puts <span class="string">&quot;行駛中!!(1)&quot;</span></span><br><span class="line">  <span class="keyword">yield</span></span><br><span class="line">  puts <span class="string">&quot;我是好公民要等行人過完才能走喔!!(3)&quot;</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">drive_car &#123;</span><br><span class="line">  puts <span class="string">&quot;停車!--這裡是block喔--(2)&quot;</span></span><br><span class="line">&#125;</span><br><span class="line">puts <span class="string">&quot;可以走啦!!(4)&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="傳遞參數給-Block"><a href="#傳遞參數給-Block" class="headerlink" title="傳遞參數給 Block"></a>傳遞參數給 Block</h3><p>Block 不是參數，但可以做為傳遞參數的角色。<br>轉讓的同時，還可以帶上拌手禮傳遞參數，依照傳遞的多寡可以依序轉讓。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">block_pass_one</span></span><br><span class="line">  <span class="keyword">yield</span> <span class="number">10</span> <span class="comment"># 傳遞10出去</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">block_pass_one <span class="keyword">do</span> |<span class="params">n</span>| <span class="comment"># do..end 之間接到參數並指定給 n</span></span><br><span class="line">  puts n <span class="comment"># 印出 10</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">block_pass_two</span></span><br><span class="line">  <span class="keyword">yield</span> <span class="number">10</span>,<span class="number">20</span> <span class="comment"># 傳遞10, 20出去</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line">block_pass_two <span class="keyword">do</span> |<span class="params">n, m</span>| <span class="comment"># do..end 之間接到參數並依序指定給 n, m</span></span><br><span class="line">  puts n <span class="comment"># 印出 10</span></span><br><span class="line">  puts m <span class="comment"># 印出 20</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="如果沒有-Block-但卻-yield-的話"><a href="#如果沒有-Block-但卻-yield-的話" class="headerlink" title="如果沒有 Block 但卻 yield 的話?"></a>如果沒有 Block 但卻 yield 的話?</h4><p>會出錯喔!! 控制權轉讓之後沒有 block 可以接的話就會有 localJumpError。<br>def say_hello # 轉讓控制權，往下找到 test two 的方法<br>yield<br>end<br>say_hello # no block given (yield) (LocalJumpError)</p>
+<h3 id="block-回傳值"><a href="#block-回傳值" class="headerlink" title="block 回傳值"></a>block 回傳值</h3><p>Block，不用寫 return，最後一行的執行結果會自動變成回傳值。像是一些方法的使用可以看出來，如下面這些例子</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># map 與 select 方法 &#123;&#125; 之間的運算就是最後的回傳。</span></span><br><span class="line">p (<span class="number">1</span>..<span class="number">10</span>).map&#123;|<span class="params">x</span>|x*<span class="number">2</span>&#125;</span><br><span class="line"></span><br><span class="line">p (<span class="number">1</span>..<span class="number">10</span>).select&#123;|<span class="params">x</span>|x.odd?&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># test two 方法後面接上block，&#123;&#125;內的判斷就成為最後的回傳</span></span><br><span class="line"><span class="comment"># yield後面帶入的參數會影響下方&#123;&#125;內判斷結果，再回到原本方法去判斷是要印出哪個內容</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_two</span></span><br><span class="line">  <span class="keyword">if</span> <span class="keyword">yield</span>(<span class="number">2</span>)</span><br><span class="line">    puts <span class="string">&quot;yes, it is 2&quot;</span></span><br><span class="line">  <span class="keyword">else</span></span><br><span class="line">    puts <span class="string">&quot;no, it is not 2&quot;</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">test_two &#123;|<span class="params">n</span>| n == <span class="number">2</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="如果使用-return-在-block-中呢"><a href="#如果使用-return-在-block-中呢" class="headerlink" title="如果使用 return 在 block 中呢?"></a>如果使用 return 在 block 中呢?</h4><p>也會出現 localjumperror，因為 Block 不是一個方法，不知道 Return 到哪裡去，所以造成錯誤。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p (<span class="number">1</span>..<span class="number">100</span>).select&#123; |<span class="params">x</span>| <span class="keyword">return</span> x % <span class="number">2</span> == <span class="number">0</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="do…end-及-大括號-之間差異"><a href="#do…end-及-大括號-之間差異" class="headerlink" title="do…end 及 大括號 {} 之間差異?"></a>do…end 及 大括號 {} 之間差異?</h3><p>一般來說是一樣的，但可能會有優先度的差別，在一些方法的寫法上導致類似先乘除後加減的狀況。</p>
+<ul>
+<li>Block 的內容如果有多行，會建議使用 do .. end 寫法</li>
+<li>如果只有一行，則建議使用大括號寫法</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">p [*<span class="number">1</span>..<span class="number">10</span>].map &#123; |<span class="params">i</span>| i * <span class="number">2</span> &#125;</span><br><span class="line"><span class="comment"># =&gt; 得到 [2, 4, 6, 8, 10, 12, 14, 16, 18, 20] &#123;&#125; 優先度高</span></span><br><span class="line"></span><br><span class="line">p [*<span class="number">1</span>..<span class="number">10</span>].map <span class="keyword">do</span> |<span class="params">i</span>| i * <span class="number">2</span> <span class="keyword">end</span></span><br><span class="line"><span class="comment"># =&gt; 得到 &lt;Enumerator: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]:map&gt; do...end 優先度低，</span></span><br><span class="line"><span class="comment"># 可以還原成 (p [*1..10].map) do |i| i * 2 end，括號內先執行完，所以後面的條件沒有被帶入執行。</span></span><br></pre></td></tr></table></figure>
+
+<p>以上就是基本對於 block 相關的介紹，後面可以開始進入 ruby 這充滿物件的世界中－物件導向，了解一下關於物件導向的一些概念吧。</p>
+<hr>
+<p><strong>參考資料:</strong></p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://railsbook.tw/chapters/07-ruby-basic-3">為你自己學 Ruby on rails</a></li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://oseanchen.github.io">Sean</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章連結: </span><span class="post-copyright-info"><a href="https://oseanchen.github.io/2022/08/27/Ruby/%E6%8E%8C%E6%8F%A1Ruby%E4%B8%96%E7%95%8C%E5%B0%B1%E8%A6%81%E5%85%88%E6%87%82%EF%BC%9A%E5%8D%80%E5%A1%8A/">https://oseanchen.github.io/2022/08/27/Ruby/%E6%8E%8C%E6%8F%A1Ruby%E4%B8%96%E7%95%8C%E5%B0%B1%E8%A6%81%E5%85%88%E6%87%82%EF%BC%9A%E5%8D%80%E5%A1%8A/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版權聲明: </span><span class="post-copyright-info">本部落格所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 許可協議。轉載請註明來自 <a href="https://oseanchen.github.io" target="_blank">Sean's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Ruby/">Ruby</a></div><div class="post_share"><div class="social-share" data-image="/img/profile.jpg" data-sites="facebook,twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2022/08/25/Ruby/%E6%8E%8C%E6%8F%A1Ruby%E4%B8%96%E7%95%8C%E5%B0%B1%E8%A6%81%E5%85%88%E6%87%82%EF%BC%9A%E6%96%B9%E6%B3%95/" title="掌握Ruby世界就要先懂：方法"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">掌握Ruby世界就要先懂：方法</div></div></a></div><div class="next-post pull-right"><a href="/2022/08/27/Rails/Rails-%E5%A5%97%E4%BB%B6%E6%93%8D%E4%BD%9C%EF%BC%8CDevise%20%E5%AE%89%E8%A3%9D%E5%8F%8A%E5%9F%BA%E6%9C%AC%E8%A8%AD%E7%BD%AE/" title="Rails 套件操作，Devise (安裝及基本設置)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Rails 套件操作，Devise (安裝及基本設置)</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相關推薦</span></div><div class="relatedPosts-list"><div><a href="/2022/08/27/Rails/Rails-%E5%A5%97%E4%BB%B6%E6%93%8D%E4%BD%9C%EF%BC%8CDevise%20%E5%AE%89%E8%A3%9D%E5%8F%8A%E5%9F%BA%E6%9C%AC%E8%A8%AD%E7%BD%AE/" title="Rails 套件操作，Devise (安裝及基本設置)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-27</div><div class="title">Rails 套件操作，Devise (安裝及基本設置)</div></div></a></div><div><a href="/2022/10/31/Rails/Rails-%E5%A5%97%E4%BB%B6%E6%93%8D%E4%BD%9C%EF%BC%8CDevise%EF%BC%88google-%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%85%A5%EF%BC%88%E4%B8%8A%EF%BC%89/" title="Rails 套件操作，Devise（google 第三方登入（上）)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-10-31</div><div class="title">Rails 套件操作，Devise（google 第三方登入（上）)</div></div></a></div><div><a href="/2022/11/02/Rails/Rails-%E5%A5%97%E4%BB%B6%E6%93%8D%E4%BD%9C%EF%BC%8CDevise%EF%BC%88google-%E7%AC%AC%E4%B8%89%E6%96%B9%E7%99%BB%E5%85%A5%EF%BC%88%E4%B8%8B%EF%BC%89/" title="Rails 套件操作，Devise（google 第三方登入（下）)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-02</div><div class="title">Rails 套件操作，Devise（google 第三方登入（下）)</div></div></a></div><div><a href="/2022/08/28/Rails/Rails%E5%A5%97%E4%BB%B6%E6%93%8D%E4%BD%9C%E6%8C%87%E5%8D%97%EF%BC%8CDevise%20(helper%E4%BD%BF%E7%94%A8%E3%80%81%E6%96%B0%E5%A2%9E%E6%AC%84%E4%BD%8D%E5%8F%8A%E9%A9%97%E8%AD%89%E3%80%81i18n)/" title="Rails 套件操作指南，Devise (helper使用、新增欄位及驗證、i18n)"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-28</div><div class="title">Rails 套件操作指南，Devise (helper使用、新增欄位及驗證、i18n)</div></div></a></div><div><a href="/2022/08/14/Ruby/%E5%88%B0Ruby%E4%B8%96%E7%95%8C%E4%B8%8D%E5%8F%AF%E4%B8%8D%E8%AA%8D%E8%AD%98%EF%BC%9A%E7%AC%A6%E8%99%9F/" title="到Ruby世界不可不認識：符號"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-14</div><div class="title">到Ruby世界不可不認識：符號</div></div></a></div><div><a href="/2022/08/17/Ruby/%E5%88%B0Ruby%E4%B8%96%E7%95%8C%E4%B8%8D%E5%8F%AF%E4%B8%8D%E8%AA%8D%E8%AD%98%EF%BC%9A%E7%AF%84%E5%9C%8D/" title="到Ruby世界不可不認識：範圍"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-08-17</div><div class="title">到Ruby世界不可不認識：範圍</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 評論</span></div><div class="comment-switch"><span class="first-comment">Giscus</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目錄</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%80%E5%A1%8A-Block"><span class="toc-number">1.</span> <span class="toc-text">區塊 Block</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Block-%E7%9A%84%E7%89%B9%E6%80%A7"><span class="toc-number">1.1.</span> <span class="toc-text">Block 的特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%9F%B7%E8%A1%8C-yield-%E6%8E%A7%E5%88%B6%E6%AC%8A%E8%BD%89%E8%AE%93"><span class="toc-number">1.2.</span> <span class="toc-text">如何執行? (yield 控制權轉讓)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%82%B3%E9%81%9E%E5%8F%83%E6%95%B8%E7%B5%A6-Block"><span class="toc-number">1.3.</span> <span class="toc-text">傳遞參數給 Block</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E6%B2%92%E6%9C%89-Block-%E4%BD%86%E5%8D%BB-yield-%E7%9A%84%E8%A9%B1"><span class="toc-number">1.3.1.</span> <span class="toc-text">如果沒有 Block 但卻 yield 的話?</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#block-%E5%9B%9E%E5%82%B3%E5%80%BC"><span class="toc-number">1.4.</span> <span class="toc-text">block 回傳值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%BF%E7%94%A8-return-%E5%9C%A8-block-%E4%B8%AD%E5%91%A2"><span class="toc-number">1.4.1.</span> <span class="toc-text">如果使用 return 在 block 中呢?</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#do%E2%80%A6end-%E5%8F%8A-%E5%A4%A7%E6%8B%AC%E8%99%9F-%E4%B9%8B%E9%96%93%E5%B7%AE%E7%95%B0"><span class="toc-number">1.5.</span> <span class="toc-text">do…end 及 大括號 {} 之間差異?</span></a></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('/img/7212.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2024 By Sean</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主題 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="淺色和深色模式轉換"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="單欄和雙欄切換"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="設定"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目錄"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直達評論"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="返回頂部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'oSeanChen/oSeanChen.github.io',
+      'data-repo-id': 'R_kgDOH0K4Aw',
+      'data-category-id': 'DIC_kwDOH0K4A84Ciek0',
+      'data-mapping': 'pathname',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },{"data-mapping":"title","data-strict":1,"data-input-position":"top"})
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Giscus' === 'Giscus' || !true) {
+    if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment= loadGiscus
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'https://oseanchen.github.io/2022/08/27/Ruby/%E6%8E%8C%E6%8F%A1Ruby%E4%B8%96%E7%95%8C%E5%B0%B1%E8%A6%81%E5%85%88%E6%87%82%EF%BC%9A%E5%8D%80%E5%A1%8A/'
+    this.page.identifier = '/2022/08/27/Ruby/%E6%8E%8C%E6%8F%A1Ruby%E4%B8%96%E7%95%8C%E5%B0%B1%E8%A6%81%E5%85%88%E6%87%82%EF%BC%9A%E5%8D%80%E5%A1%8A/'
+    this.page.title = '掌握Ruby世界就要先懂：區塊'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://https-oseanchen-github-io.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=https-oseanchen-github-io&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Giscus' === 'Disqus' || !true) {
+    if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜尋</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  資料庫載入中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜尋文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
