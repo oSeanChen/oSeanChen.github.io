@@ -13,7 +13,16 @@
   <url>
     <loc>https://oseanchen.github.io/2024/10/06/UnitTest-3-Junit-5-%E5%B8%B8%E7%94%A8%E8%A8%BB%E8%A7%A3/</loc>
     
-    <lastmod>2024-10-06</lastmod>
+    <lastmod>2024-10-07</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://oseanchen.github.io/2024/10/07/UnitTest-5-Mock-Test/</loc>
+    
+    <lastmod>2024-10-07</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -778,6 +787,13 @@
   
   <url>
     <loc>https://oseanchen.github.io/tags/JUnit-5/</loc>
+    <lastmod>2024-10-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://oseanchen.github.io/tags/Mockito/</loc>
     <lastmod>2024-10-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
