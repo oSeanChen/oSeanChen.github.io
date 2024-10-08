@@ -1,0 +1,346 @@
+<!DOCTYPE html><html lang="zh-TW" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Spring Security (2) - 串接個人資料庫 | Sean's Blog</title><meta name="author" content="Sean"><meta name="copyright" content="Sean"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#000"><meta name="description" content="實際要來看一下我們要使用個人的使用者資訊資料表要如何串接，因為 Security 提供很多客製化的介面所以需要實作許多特殊的物件就會讓流程蠻複雜的，整體來說可以先有個概念，我們原本需要透過 dao 來和 DB 溝通的部分需要改成 Security 框架的模式，原本可以由 Spring Data JP"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://oseanchen.github.io/2024/10/08/Spring-Security-2-%E4%B8%B2%E6%8E%A5%E5%80%8B%E4%BA%BA%E8%B3%87%E6%96%99%E5%BA%AB/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="sy_aItoBmo7s6Mb8wbh97IV_N4jjnUXRzwBNb4brupA"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查詢的內容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '複製成功',
+    error: '複製錯誤',
+    noSupport: '瀏覽器不支援'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '剛剛',
+    min: '分鐘前',
+    hour: '小時前',
+    day: '天前',
+    month: '個月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '載入更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Spring Security (2) - 串接個人資料庫',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-10-08 22:57:33'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/profile.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">60</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">12</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-user"></i><span> 關於我</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 歸檔</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Sean's Blog"><span class="site-name">Sean's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜尋</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-user"></i><span> 關於我</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 歸檔</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Spring Security (2) - 串接個人資料庫</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">發表於</span><time class="post-meta-date-created" datetime="2024-10-08T14:53:37.586Z" title="發表於 2024-10-08 22:53:37">2024-10-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新於</span><time class="post-meta-date-updated" datetime="2024-10-08T14:57:33.205Z" title="更新於 2024-10-08 22:57:33">2024-10-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Spring-Boot/">Spring Boot</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Spring-Boot/Spring-Security/">Spring Security</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Spring Security (2) - 串接個人資料庫"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>實際要來看一下我們要使用個人的使用者資訊資料表要如何串接，因為 Security 提供很多客製化的介面所以需要實作許多特殊的物件就會讓流程蠻複雜的，整體來說可以先有個概念，我們原本需要透過 dao 來和 DB 溝通的部分需要改成 Security 框架的模式，原本可以由 Spring Data JPA 直接取得 User 的物件回傳，但因為 Security 將使用者資訊會封裝成 <code>UserDetails</code> 這個物件來回傳，必須要透過 <code>UserDetailsService</code> 這邊來取得這個物件，所以會想辦法把這些東西去實做出來。</p>
+<p>資料庫是串接 MySQL ，相關配置可以參考 <a href="https://oseanchen.github.io/2024/09/24/SpringBoot/Spring-Data-JPA-%EF%BC%881%EF%BC%89%E5%9F%BA%E7%A4%8E%E6%87%89%E7%94%A8%E6%9E%B6%E6%A7%8B/">Spring Data JPA （1）基礎應用架構</a> 引入相關 Dependency</p>
+<h1 id="資料庫架構-Database-Schema"><a href="#資料庫架構-Database-Schema" class="headerlink" title="資料庫架構 Database Schema"></a>資料庫架構 Database Schema</h1><p>提供 SQL 給大家參考</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> users</span><br><span class="line">(</span><br><span class="line">    id         <span class="type">BIGINT</span> <span class="keyword">PRIMARY</span> KEY AUTO_INCREMENT,</span><br><span class="line">    username   <span class="type">VARCHAR</span>(<span class="number">50</span>)  <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span>,</span><br><span class="line">    email      <span class="type">VARCHAR</span>(<span class="number">100</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span>,</span><br><span class="line">    password   <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    created_at DATETIME <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_TIMESTAMP</span>,</span><br><span class="line">    updated_at DATETIME <span class="keyword">DEFAULT</span> <span class="built_in">CURRENT_TIMESTAMP</span> <span class="keyword">ON</span> <span class="keyword">UPDATE</span> <span class="built_in">CURRENT_TIMESTAMP</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> roles</span><br><span class="line">(</span><br><span class="line">    id        <span class="type">BIGINT</span> <span class="keyword">PRIMARY</span> KEY AUTO_INCREMENT,</span><br><span class="line">    role_name <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> user_roles</span><br><span class="line">(</span><br><span class="line">    user_id <span class="type">BIGINT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    role_id <span class="type">BIGINT</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    <span class="keyword">PRIMARY</span> KEY (user_id, role_id),</span><br><span class="line">    <span class="keyword">FOREIGN</span> KEY (user_id) <span class="keyword">REFERENCES</span> users (id),</span><br><span class="line">    <span class="keyword">FOREIGN</span> KEY (role_id) <span class="keyword">REFERENCES</span> roles (id)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Config-配置"><a href="#Config-配置" class="headerlink" title="Config 配置"></a>Config 配置</h2><p>延續前面文章的配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableWebSecurity</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SecurityConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> SecurityFilterChain <span class="title function_">filterChain</span><span class="params">(HttpSecurity httpSecurity)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">return</span> httpSecurity</span><br><span class="line">                .csrf(customizer -&gt; customizer.disable())</span><br><span class="line">                .authorizeHttpRequests((registry) -&gt; registry</span><br><span class="line">                        .requestMatchers(HttpMethod.POST, <span class="string">&quot;/register&quot;</span>, <span class="string">&quot;/login&quot;</span>).permitAll()</span><br><span class="line">                        .requestMatchers(HttpMethod.GET, <span class="string">&quot;/error&quot;</span>, <span class="string">&quot;/api/products/**&quot;</span>).permitAll()</span><br><span class="line">                        .requestMatchers(HttpMethod.GET, <span class="string">&quot;/checkAuthentication&quot;</span>).hasAnyAuthority(<span class="string">&quot;ROLE_BUYER&quot;</span>, <span class="string">&quot;ROLE_SELLER&quot;</span>, <span class="string">&quot;ROLE_ADMIN&quot;</span>)</span><br><span class="line">                        .requestMatchers(<span class="string">&quot;/api/users/**&quot;</span>).hasAuthority(<span class="string">&quot;ROLE_ADMIN&quot;</span>)</span><br><span class="line">                        .anyRequest().authenticated()</span><br><span class="line">                )</span><br><span class="line">                .formLogin(Customizer.withDefaults())</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="建-User-Role-UserRole-UserRepository"><a href="#建-User-Role-UserRole-UserRepository" class="headerlink" title="建 User, Role , UserRole, UserRepository"></a>建 User, Role , UserRole, UserRepository</h2><p>權限部分需要在 users 表裡面多一個 role 的欄位來進行多對多關聯，並且建立 roles 表和 user_roles 表</p>
+<p>User Entity</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Table(name = &quot;users&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> <span class="keyword">extends</span> <span class="title class_">BaseEntity</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Column(nullable = false)</span></span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Column(nullable = false)</span></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Column(nullable = false)</span></span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ManyToMany(fetch = FetchType.EAGER)</span></span><br><span class="line">    <span class="meta">@JoinTable(</span></span><br><span class="line"><span class="meta">            name = &quot;user_roles&quot;,</span></span><br><span class="line"><span class="meta">            joinColumns = @JoinColumn(name = &quot;user_id&quot;),</span></span><br><span class="line"><span class="meta">            inverseJoinColumns = @JoinColumn(name = &quot;role_id&quot;),</span></span><br><span class="line"><span class="meta">            uniqueConstraints = @UniqueConstraint(columnNames = &#123;&quot;user_id&quot;, &quot;role_id&quot;&#125;)</span></span><br><span class="line"><span class="meta">    )</span></span><br><span class="line">    <span class="keyword">private</span> Set&lt;Role&gt; roles = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Role Entity</p>
+<p>roles 表內 roleName 的欄位用 Enum 作為資料類型，所以另外有 UserRole 的 Enum</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="meta">@Table(name = &quot;roles&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Role</span> &#123;</span><br><span class="line">    <span class="meta">@Id</span></span><br><span class="line">    <span class="meta">@GeneratedValue(strategy = GenerationType.IDENTITY)</span></span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Enumerated(EnumType.STRING)</span></span><br><span class="line">    <span class="meta">@Column(nullable = false, unique = true)</span></span><br><span class="line">    <span class="keyword">private</span> UserRole roleName;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>UserRole Enum</p>
+<p>三種權限分別是 ADMIN, BUYER, SELLER 分別是管理者、買家、商家。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.oseanchen.crudproject.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">UserRole</span> &#123;</span><br><span class="line">    ROLE_ADMIN,</span><br><span class="line">    ROLE_BUYER,</span><br><span class="line">    ROLE_SELLER</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="UserPricipal-實作-Custom-UserDetails"><a href="#UserPricipal-實作-Custom-UserDetails" class="headerlink" title="UserPricipal 實作 (Custom UserDetails)"></a>UserPricipal 實作 (Custom UserDetails)</h2><p>啟動程式時，Spring Security 會檢查專案中是否有 UserDetailsService 。如果沒有，則自動建立一個前一篇有提到的預設管理元件 InMemoryUserDetailsManager ，並提供預設 user 然後把密碼印在 console 。如果我們自行提供 UserDetailsService ，則 Security 就會自動採用。</p>
+<p>把我們 User Entity 轉成 Security 的 UserDetails 介面，我們取名 UserPrincipal 來稱呼你也可以自訂自己的 UserDetails 名稱，由於是介面所以它所提供的方法都要實做一遍。</p>
+<p>裡面有幾個主要的就是 <code>getUsername</code>, <code>getPassword</code>, <code>getAuthorities</code> ，讓我們可以拿到我們要的 User 資訊，其他的設置主要關於帳號是否到期、鎖定、密碼過期、啟用等等，可以依據你的需求配置紀錄相關資訊，讓 Spring Security 可以進行驗證，就算帳號密碼正確也不一定可以通過認證。這邊先進行簡單的設計都預設為 true 通過驗證</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserPrincipal</span> <span class="keyword">implements</span> <span class="title class_">UserDetails</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> User user;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">UserPrincipal</span><span class="params">(User user)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.user = user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Collection&lt;? <span class="keyword">extends</span> <span class="title class_">GrantedAuthority</span>&gt; getAuthorities() &#123;</span><br><span class="line"></span><br><span class="line">        Set&lt;GrantedAuthority&gt; authorities = user.getRoles().stream()</span><br><span class="line">                .map(role -&gt; <span class="keyword">new</span> <span class="title class_">SimpleGrantedAuthority</span>(role.getRoleName().name()))</span><br><span class="line">                .collect(Collectors.toSet());</span><br><span class="line">        <span class="keyword">return</span> authorities;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getPassword</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> user.getPassword();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getUsername</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> user.getUsername();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isAccountNonExpired</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isAccountNonLocked</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isCredentialsNonExpired</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEnabled</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="UserDetailService-實作-Custom-UserDetailService"><a href="#UserDetailService-實作-Custom-UserDetailService" class="headerlink" title="UserDetailService 實作 (Custom UserDetailService)"></a>UserDetailService 實作 (Custom UserDetailService)</h2><p>接著需要加入管理的部分， 先前有提到原本預設管理元件 InMemoryUserDetailsManager 它其實就會去實作 UserDetailService，裡面有一個方法是 loadUserByUsername 需要實作，這邊需要實作用 username 來找出 User 資料，然後把 User 封裝成 UserDetails</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyUserDetailsService</span> <span class="keyword">implements</span> <span class="title class_">UserDetailsService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserDao repo;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> UserDetails <span class="title function_">loadUserByUsername</span><span class="params">(String username)</span> <span class="keyword">throws</span> UsernameNotFoundException &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> repo.findByUsername(username);</span><br><span class="line">        <span class="keyword">if</span> (user == <span class="literal">null</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;username = &quot;</span> + username + <span class="string">&quot; not found&quot;</span>);</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UsernameNotFoundException</span>(<span class="string">&quot;user not found&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">UserPrincipal</span>(user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="UserController-UserService-實作確認可創建及撈出資料"><a href="#UserController-UserService-實作確認可創建及撈出資料" class="headerlink" title="UserController, UserService 實作確認可創建及撈出資料"></a>UserController, UserService 實作確認可創建及撈出資料</h2><p>建立 UserController 的幾個主要端口讓 user 可以先創建跟查詢，這邊我們透過 userRequest 的 DTO 來傳遞註冊時的帳號密碼等資訊</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/api&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/users&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;List&lt;User&gt;&gt; <span class="title function_">getUsers</span><span class="params">()</span> &#123;</span><br><span class="line">        List&lt;User&gt; userList = userService.getUsers();</span><br><span class="line">        <span class="keyword">return</span> ResponseEntity.status(HttpStatus.OK).body(userList);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/users/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;Optional&lt;User&gt;&gt; <span class="title function_">getUser</span><span class="params">(<span class="meta">@PathVariable</span> Integer id)</span> &#123;</span><br><span class="line">        Optional&lt;User&gt; user = userService.getUserByID(id);</span><br><span class="line">        <span class="keyword">if</span> (user.isPresent()) &#123;</span><br><span class="line">            <span class="keyword">return</span> ResponseEntity.status(HttpStatus.OK).body(user);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ResponseEntity.status(HttpStatus.NOT_FOUND).build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> ResponseEntity&lt;User&gt; <span class="title function_">Register</span><span class="params">(<span class="meta">@RequestBody</span> <span class="meta">@Valid</span> UserRequest userRequest)</span> &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">createdUser</span> <span class="operator">=</span> userService.createUser(userRequest);</span><br><span class="line">        <span class="keyword">return</span> ResponseEntity.status(HttpStatus.CREATED).body(createdUser);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>Service 這邊主要處理資料轉換，註冊的部分要 save user 預設先用一個 set<Role> 裝入預設的角色，我們是設定一般辦好會有買家跟賣家的權限，所以從 UserRole Enum 裡面取得放入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserDao userDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RoleDao roleDao;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> List&lt;User&gt; <span class="title function_">getUsers</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> userDao.findAll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Optional&lt;User&gt; <span class="title function_">getUserByID</span><span class="params">(Integer id)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> userDao.findById(id);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Transactional</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">createUser</span><span class="params">(UserRequest userRequest)</span> &#123;</span><br><span class="line">        Set&lt;Role&gt; roles = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();</span><br><span class="line">        List&lt;String&gt; roleList = Arrays.asList(UserRole.ROLE_BUYER.name(), UserRole.ROLE_SELLER.name());</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> convertToModel(userRequest);</span><br><span class="line">        user.getRoles().addAll(roles);</span><br><span class="line">        <span class="keyword">return</span> userDao.save(user);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> User <span class="title function_">convertToModel</span><span class="params">(UserRequest userRequest)</span> &#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setUsername(userRequest.getUsername());</span><br><span class="line">        user.setEmail(userRequest.getEmail());</span><br><span class="line">        user.setPassword(userRequest.getPassword());</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>UserRequest DTO</p>
+<p>DTO 內應用 @Valid 相關的驗證註解設定一些對應的參數規格</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.oseanchen.crudproject.dto;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> jakarta.validation.constraints.*;</span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserRequest</span> &#123;</span><br><span class="line">    <span class="meta">@NotBlank(message = &quot;username can not be blank&quot;)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotBlank(message = &quot;password can not be blank&quot;)</span></span><br><span class="line">    <span class="meta">@Size(min = 6, message = &quot;password length at least 6 characters&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotBlank(message = &quot;email can not be blank&quot;)</span></span><br><span class="line">    <span class="meta">@Email(message = &quot;invalid email format&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="建立-PasswordEncoder-提升資安規格"><a href="#建立-PasswordEncoder-提升資安規格" class="headerlink" title="建立 PasswordEncoder 提升資安規格"></a>建立 PasswordEncoder 提升資安規格</h2><p>使用 Bcrypt 加密方式，比起 MD5 或是 SHA 的雜湊演算更安全，因為加入隨機生成的鹽值 salt 可以防止駭客使用彩虹表來進行破解。</p>
+<h3 id="Service-引入-BCryptPasswordEncoder"><a href="#Service-引入-BCryptPasswordEncoder" class="headerlink" title="Service 引入 BCryptPasswordEncoder"></a>Service 引入 BCryptPasswordEncoder</h3><p>引入後將準備儲存的密碼進行加密。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="type">BCryptPasswordEncoder</span> <span class="variable">encoder</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BCryptPasswordEncoder</span>(<span class="number">12</span>);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Transactional</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">createUser</span><span class="params">(UserRequest userRequest)</span> &#123;</span><br><span class="line">        Set&lt;Role&gt; roles = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;();</span><br><span class="line">        List&lt;UserRole&gt; roleList = Arrays.asList(UserRole.ROLE_BUYER, UserRole.ROLE_SELLER);</span><br><span class="line">        <span class="comment">// 改加入 encoder</span></span><br><span class="line">        userRequest.setPassword(encoder.encode(userRequest.getPassword()));</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> convertToModel(userRequest);</span><br><span class="line">        user.getRoles().addAll(roles);</span><br><span class="line">        <span class="keyword">return</span> userDao.save(user);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>最後可以測試目前儲存的資料，假設我們放入下面註冊的資料。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;username&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;sean&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;sean123&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span><span class="string">&quot;kim@123.com&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;username&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;tom&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span> <span class="punctuation">:</span> <span class="string">&quot;tom123&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;email&quot;</span><span class="punctuation">:</span><span class="string">&quot;tom@123.com&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>資料庫儲存時應該看到的資料像是下面這樣，密碼會是加密過的。<br><img src="https://ithelp.ithome.com.tw/upload/images/20240912/20150977gPv8Bk0TLP.png" alt="https://ithelp.ithome.com.tw/upload/images/20240912/20150977gPv8Bk0TLP.png"></p>
+<h3 id="Config-改變-AuthenticationProvider-Encoder-方式"><a href="#Config-改變-AuthenticationProvider-Encoder-方式" class="headerlink" title="Config 改變 AuthenticationProvider Encoder 方式"></a>Config 改變 AuthenticationProvider Encoder 方式</h3><p>這邊會透過 DaoAuthenticationProvider 重新設定 AuthenticationProvider 所使用的 userDetailsService, 還有 passwordEncoder</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@EnableWebSecurity</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SecurityConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserDetailsService userDetailsService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> AuthenticationProvider <span class="title function_">authProvider</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">DaoAuthenticationProvider</span> <span class="variable">provider</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DaoAuthenticationProvider</span>();</span><br><span class="line">        provider.setUserDetailsService(userDetailsService);</span><br><span class="line">        provider.setPasswordEncoder(<span class="keyword">new</span> <span class="title class_">BCryptPasswordEncoder</span>(<span class="number">12</span>));</span><br><span class="line">        <span class="keyword">return</span> provider;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> SecurityFilterChain <span class="title function_">filterChain</span><span class="params">(HttpSecurity httpSecurity)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">						<span class="comment">//...略</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="實現登入"><a href="#實現登入" class="headerlink" title="實現登入"></a>實現登入</h3><p>最後直接啟動程式連到 <a target="_blank" rel="noopener" href="http://localhost:8080/login">http://localhost:8080/login</a> 確認可以正常登入，且登入之後可以根據我們 config 配置的權限進行瀏覽。</p>
+<p>例如我上面 Config 配置只讓 ADMIN 的使用者可以查詢所有 user 的資料，如果是具有該權限的就可以成功瀏覽，但是其他使用者查詢就會是 403 Forbidden</p>
+<p>先使用 sean 登入<br><img src="https://ithelp.ithome.com.tw/upload/images/20240913/20150977Vqw5hWttRR.png" alt="https://ithelp.ithome.com.tw/upload/images/20240913/20150977Vqw5hWttRR.png"></p>
+<p>再使用 tom 登入<br><img src="https://ithelp.ithome.com.tw/upload/images/20240913/20150977H4P40dESR1.png" alt="https://ithelp.ithome.com.tw/upload/images/20240913/20150977H4P40dESR1.png"></p>
+<h2 id="總結："><a href="#總結：" class="headerlink" title="總結："></a>總結：</h2><p>以上就完成串接自己資料庫並且實現 Security 基本驗證的框架示範，總結一下這部分因為太多步驟要處理：</p>
+<ol>
+<li>建立資料庫 schema, Entity、串連 Spring Data JPA 和資料庫</li>
+<li>UserDetails 介面實作</li>
+<li>UserDetailsService 介面實作撈出 user 並且封裝成 UserDetails 回傳</li>
+<li>建置 Controller 及 Service 測試</li>
+<li>加入 BCryptPasswordEncoder 實作，引入註冊帳號加密密碼後儲存、Config 重設 AuthenticationProvider 加入對應的 BCryptPasswordEncoder</li>
+</ol>
+<p>希望大家對於 Spring Security 有更多的認識，也可以自己建立起保護 server 的環境喔！ 下一篇會引入現今業界常使用到的 JWT 方式來進行登入及相關權限的管控。</p>
+<h3 id="Ref"><a href="#Ref" class="headerlink" title="Ref:"></a>Ref:</h3><ul>
+<li><a target="_blank" rel="noopener" href="https://chikuwa-tech-study.blogspot.com/2023/11/spring-boot-security-authentication-integrating-with-mongodb-database.html">【Spring Boot】第 17.2 課－在 Spring Security 整合資料庫進行認證</a></li>
+<li>Udemy - Java Spring Framework 6 with Spring Boot 3</li>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7187020239182725181">https://juejin.cn/post/7187020239182725181</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://oseanchen.github.io">Sean</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章連結: </span><span class="post-copyright-info"><a href="https://oseanchen.github.io/2024/10/08/Spring-Security-2-%E4%B8%B2%E6%8E%A5%E5%80%8B%E4%BA%BA%E8%B3%87%E6%96%99%E5%BA%AB/">https://oseanchen.github.io/2024/10/08/Spring-Security-2-%E4%B8%B2%E6%8E%A5%E5%80%8B%E4%BA%BA%E8%B3%87%E6%96%99%E5%BA%AB/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版權聲明: </span><span class="post-copyright-info">本部落格所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 許可協議。轉載請註明來自 <a href="https://oseanchen.github.io" target="_blank">Sean's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" data-sites="facebook,twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/2024/10/08/Spring-Security-1-%E4%BB%8B%E7%B4%B9%E5%8F%8A%E6%87%89%E7%94%A8/" title="Spring Security (1) - 介紹及應用"><img class="cover" src="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Spring Security (1) - 介紹及應用</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 評論</span></div><div class="comment-switch"><span class="first-comment">Giscus</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目錄</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B3%87%E6%96%99%E5%BA%AB%E6%9E%B6%E6%A7%8B-Database-Schema"><span class="toc-text">資料庫架構 Database Schema</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Config-%E9%85%8D%E7%BD%AE"><span class="toc-text">Config 配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA-User-Role-UserRole-UserRepository"><span class="toc-text">建 User, Role , UserRole, UserRepository</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UserPricipal-%E5%AF%A6%E4%BD%9C-Custom-UserDetails"><span class="toc-text">UserPricipal 實作 (Custom UserDetails)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UserDetailService-%E5%AF%A6%E4%BD%9C-Custom-UserDetailService"><span class="toc-text">UserDetailService 實作 (Custom UserDetailService)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UserController-UserService-%E5%AF%A6%E4%BD%9C%E7%A2%BA%E8%AA%8D%E5%8F%AF%E5%89%B5%E5%BB%BA%E5%8F%8A%E6%92%88%E5%87%BA%E8%B3%87%E6%96%99"><span class="toc-text">UserController, UserService 實作確認可創建及撈出資料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E7%AB%8B-PasswordEncoder-%E6%8F%90%E5%8D%87%E8%B3%87%E5%AE%89%E8%A6%8F%E6%A0%BC"><span class="toc-text">建立 PasswordEncoder 提升資安規格</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Service-%E5%BC%95%E5%85%A5-BCryptPasswordEncoder"><span class="toc-text">Service 引入 BCryptPasswordEncoder</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Config-%E6%94%B9%E8%AE%8A-AuthenticationProvider-Encoder-%E6%96%B9%E5%BC%8F"><span class="toc-text">Config 改變 AuthenticationProvider Encoder 方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%A6%E7%8F%BE%E7%99%BB%E5%85%A5"><span class="toc-text">實現登入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B8%BD%E7%B5%90%EF%BC%9A"><span class="toc-text">總結：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Ref"><span class="toc-text">Ref:</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png')"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2024 By Sean</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主題 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="淺色和深色模式轉換"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="單欄和雙欄切換"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="設定"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目錄"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直達評論"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="返回頂部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'oSeanChen/oSeanChen.github.io',
+      'data-repo-id': 'R_kgDOH0K4Aw',
+      'data-category-id': 'DIC_kwDOH0K4A84Ciek0',
+      'data-mapping': 'pathname',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },{"data-mapping":"title","data-strict":1,"data-input-position":"top"})
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Giscus' === 'Giscus' || !true) {
+    if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment= loadGiscus
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'https://oseanchen.github.io/2024/10/08/Spring-Security-2-%E4%B8%B2%E6%8E%A5%E5%80%8B%E4%BA%BA%E8%B3%87%E6%96%99%E5%BA%AB/'
+    this.page.identifier = '/2024/10/08/Spring-Security-2-%E4%B8%B2%E6%8E%A5%E5%80%8B%E4%BA%BA%E8%B3%87%E6%96%99%E5%BA%AB/'
+    this.page.title = 'Spring Security (2) - 串接個人資料庫'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://https-oseanchen-github-io.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=https-oseanchen-github-io&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Giscus' === 'Disqus' || !true) {
+    if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜尋</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  資料庫載入中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜尋文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
