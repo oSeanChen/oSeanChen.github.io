@@ -1,0 +1,394 @@
+<!DOCTYPE html><html lang="zh-TW" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>電商 RESTFul API + Spring Security (3) UnitTest | Sean's Blog</title><meta name="author" content="Sean"><meta name="copyright" content="Sean"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#000"><meta name="description" content="商品 Service UnitTest這邊針對商品部分 Service 寫一些單元測試，下面先列出預計測試的名稱，主要根據實際方法內會出現判斷的條件去設計，嘗試讓每個 Service 單元測試都 100%。 先注入並且初始化我們需要用到的 Bean，這邊主要測試 ProductService ，所以"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://oseanchen.github.io/2024/10/19/%E9%9B%BB%E5%95%86-RESTFul-API-Spring-Security-3-UnitTest/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="google-site-verification" content="sy_aItoBmo7s6Mb8wbh97IV_N4jjnUXRzwBNb4brupA"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查詢的內容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '複製成功',
+    error: '複製錯誤',
+    noSupport: '瀏覽器不支援'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '剛剛',
+    min: '分鐘前',
+    hour: '小時前',
+    day: '天前',
+    month: '個月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '載入更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '電商 RESTFul API + Spring Security (3) UnitTest',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-10-19 01:31:25'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/profile.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a><a href="/tags/"><div class="headline">標籤</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分類</div><div class="length-num">12</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-user"></i><span> 關於我</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 歸檔</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png')"><nav id="nav"><span id="blog-info"><a href="/" title="Sean's Blog"><span class="site-name">Sean's Blog</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);"><i class="fas fa-search fa-fw"></i><span> 搜尋</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首頁</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa-solid fa-user"></i><span> 關於我</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分類</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 標籤</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 歸檔</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">電商 RESTFul API + Spring Security (3) UnitTest</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">發表於</span><time class="post-meta-date-created" datetime="2024-10-18T17:31:02.648Z" title="發表於 2024-10-19 01:31:02">2024-10-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新於</span><time class="post-meta-date-updated" datetime="2024-10-18T17:31:25.812Z" title="更新於 2024-10-19 01:31:25">2024-10-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Spring-Boot/">Spring Boot</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="電商 RESTFul API + Spring Security (3) UnitTest"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">閱讀量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="商品-Service-UnitTest"><a href="#商品-Service-UnitTest" class="headerlink" title="商品 Service UnitTest"></a>商品 Service UnitTest</h2><p>這邊針對商品部分 Service 寫一些單元測試，下面先列出預計測試的名稱，主要根據實際方法內會出現判斷的條件去設計，嘗試讓每個 Service 單元測試都 100%。</p>
+<p>先注入並且初始化我們需要用到的 Bean，這邊主要測試 <code>ProductService</code> ，所以加上 <code>@InjectMocks</code> 註解，其他應用到的 Dao 都用 <code>@Mock</code> 標住用 mock 產生虛擬元件注入有標住 <code>@InjectMocks</code> 的 ProductService，@BeforeEach 先初始化待會會測試用到的一些物件資料。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ExtendWith(MockitoExtension.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ProductServiceTest</span> &#123;</span><br><span class="line">    <span class="meta">@Mock</span></span><br><span class="line">    <span class="keyword">private</span> ProductDao productDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@InjectMocks</span></span><br><span class="line">    <span class="keyword">private</span> ProductService productService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Product mockProduct1;</span><br><span class="line">    <span class="keyword">private</span> Product mockProduct2;</span><br><span class="line">    <span class="keyword">private</span> ProductRequest mockProductRequest;</span><br><span class="line">    <span class="keyword">private</span> List&lt;Product&gt; mockProducts;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@BeforeEach</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">setUp</span><span class="params">()</span> &#123;</span><br><span class="line">        mockProduct1 = <span class="keyword">new</span> <span class="title class_">Product</span>();</span><br><span class="line">        mockProduct1.setId(<span class="number">1</span>);</span><br><span class="line">        mockProduct1.setProductName(<span class="string">&quot;Test Product&quot;</span>);</span><br><span class="line">        mockProduct1.setUnitPrice(<span class="number">10.0</span>);</span><br><span class="line">        mockProduct1.setUnitsInStock(<span class="number">100</span>);</span><br><span class="line">        mockProduct1.setDiscontinued(<span class="literal">false</span>);</span><br><span class="line">        <span class="type">Supplier</span> <span class="variable">supplier1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Supplier</span>();</span><br><span class="line">        supplier1.setId(<span class="number">1</span>);</span><br><span class="line">        mockProduct1.setSupplier(supplier1);</span><br><span class="line"></span><br><span class="line">        mockProduct2 = <span class="keyword">new</span> <span class="title class_">Product</span>();</span><br><span class="line">        mockProduct2.setId(<span class="number">2</span>);</span><br><span class="line">        mockProduct2.setProductName(<span class="string">&quot;Test Wireless Mouse&quot;</span>);</span><br><span class="line">        mockProduct2.setDiscontinued(<span class="literal">false</span>);</span><br><span class="line">        <span class="type">Supplier</span> <span class="variable">supplier2</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Supplier</span>();</span><br><span class="line">        supplier2.setId(<span class="number">2</span>);</span><br><span class="line">        mockProduct2.setSupplier(supplier2);</span><br><span class="line">        mockProduct2.setUnitPrice(<span class="number">24.99</span>);</span><br><span class="line">        mockProduct2.setUnitsInStock(<span class="number">103</span>);</span><br><span class="line"></span><br><span class="line">        mockProductRequest = <span class="keyword">new</span> <span class="title class_">ProductRequest</span>();</span><br><span class="line">        mockProductRequest.setProductName(<span class="string">&quot;New/Update Product&quot;</span>);</span><br><span class="line">        mockProductRequest.setUnitPrice(<span class="number">15.0</span>);</span><br><span class="line">        mockProductRequest.setUnitsInStock(<span class="number">50</span>);</span><br><span class="line">        mockProductRequest.setDiscontinued(<span class="literal">false</span>);</span><br><span class="line">        mockProductRequest.setSupplier(supplier1);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">		<span class="comment">// 取得所有商品</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testGetAllProducts</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">		<span class="comment">// 取得特定 id 商品</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testGetProductById</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">    <span class="comment">// 取得特定 id 商品，找不到該 id 之商品</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testGetProductById_NotFound</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">    <span class="comment">// 創建商品</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testCreateProduct</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">    <span class="comment">// 更新商品</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testUpdateProduct</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">    <span class="comment">// 更新商品，找不到該 id 之產品</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testUpdateProduct_NotFound</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">    <span class="comment">// 刪除商品</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testDeleteProduct</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">    <span class="comment">// 搜尋產品並排序</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testSearchAndSortProducts</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">    <span class="comment">// 搜尋產品並排序，傳入商品名參數為空</span></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testSearchAndSortProducts_NullOrEmptyProductName</span><span class="params">()</span> &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>關於基本查詢相關</p>
+<ul>
+<li><code>testGetAllProducts</code><ul>
+<li>模擬回傳 mockProduct1, mockProduct2</li>
+<li>驗證執行後回傳的第 1 個 product 資訊和 mockProduct1 相同</li>
+<li>驗證執行後回傳的第 2 個 product 資訊和 mockProduct2 相同</li>
+<li>驗證回傳數量</li>
+<li>驗證調用 findAll() 1 次</li>
+</ul>
+</li>
+<li><code>testGetProductById</code><ul>
+<li>模擬查尋 id &#x3D; 1 回傳 mockProduct1</li>
+<li>驗證執行後回傳的 product 資訊和 mockProduct1 相同</li>
+<li>驗證調用 findById() 1 次</li>
+</ul>
+</li>
+<li><code>testGetProductById_NotFound</code><ul>
+<li>模擬查尋 id &#x3D; 3 回傳空</li>
+<li>驗證執行後 product 是否存在為 false</li>
+<li>驗證調用 findById() 1 次</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"> <span class="keyword">void</span> <span class="title function_">testSearchAndSortProducts</span><span class="params">()</span> &#123;</span><br><span class="line">     mockProducts = Arrays.asList(mockProduct2, mockProduct1);</span><br><span class="line">     Page&lt;Product&gt; productPage = <span class="keyword">new</span> <span class="title class_">PageImpl</span>&lt;&gt;(mockProducts);</span><br><span class="line"></span><br><span class="line">     when(productDao.findByProductNameContainingIgnoreCase(eq(<span class="string">&quot;Test&quot;</span>), any(PageRequest.class)))</span><br><span class="line">             .thenReturn(productPage);</span><br><span class="line"></span><br><span class="line">     List&lt;Product&gt; result = productService.searchAndSortProducts(<span class="string">&quot;Test&quot;</span>, <span class="string">&quot;id&quot;</span>, <span class="string">&quot;desc&quot;</span>, <span class="number">0</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">     assertEquals(<span class="number">2</span>, result.size());</span><br><span class="line">     assertEquals(mockProduct2, result.get(<span class="number">0</span>));</span><br><span class="line">     assertEquals(mockProduct1, result.get(<span class="number">1</span>));</span><br><span class="line">     verify(productDao).findByProductNameContainingIgnoreCase(eq(<span class="string">&quot;Test&quot;</span>), any(PageRequest.class));</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"> <span class="meta">@Test</span></span><br><span class="line"> <span class="keyword">void</span> <span class="title function_">testSearchAndSortProducts_NullOrEmptyProductName</span><span class="params">()</span> &#123;</span><br><span class="line">     mockProducts = Arrays.asList(mockProduct1, mockProduct2);</span><br><span class="line">     Page&lt;Product&gt; productPage = <span class="keyword">new</span> <span class="title class_">PageImpl</span>&lt;&gt;(mockProducts);</span><br><span class="line">     when(productDao.findAll(any(PageRequest.class))).thenReturn(productPage);</span><br><span class="line"></span><br><span class="line">     <span class="comment">// null product name</span></span><br><span class="line">     List&lt;Product&gt; resultNull = productService.searchAndSortProducts(<span class="literal">null</span>, <span class="string">&quot;id&quot;</span>, <span class="string">&quot;asc&quot;</span>, <span class="number">0</span>, <span class="number">10</span>);</span><br><span class="line">     assertEquals(<span class="number">2</span>, resultNull.size());</span><br><span class="line">     assertEquals(mockProduct1, resultNull.get(<span class="number">0</span>));</span><br><span class="line">     assertEquals(mockProduct2, resultNull.get(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">     <span class="comment">// empty product name</span></span><br><span class="line">     List&lt;Product&gt; resultEmpty = productService.searchAndSortProducts(<span class="string">&quot;&quot;</span>, <span class="string">&quot;id&quot;</span>, <span class="string">&quot;asc&quot;</span>, <span class="number">0</span>, <span class="number">10</span>);</span><br><span class="line">     assertEquals(<span class="number">2</span>, resultEmpty.size());</span><br><span class="line">     assertEquals(mockProduct1, resultEmpty.get(<span class="number">0</span>));</span><br><span class="line">     assertEquals(mockProduct2, resultNull.get(<span class="number">1</span>));</span><br><span class="line"></span><br><span class="line">     verify(productDao, times(<span class="number">2</span>)).findAll(any(PageRequest.class));</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>關於新增、刪除、修改相關</p>
+<ul>
+<li><code>testCreateProduct</code><ul>
+<li>根據初始化的 mockProductRequest 模擬儲存，回傳 mockProductRequest 轉成的 newProduct</li>
+<li>驗證回傳不為空</li>
+<li>驗證回傳 product 和 newProduct 相同</li>
+<li>驗證調用 save() 1 次</li>
+</ul>
+</li>
+<li><code>testUpdateProduct</code><ul>
+<li>根據初始化的 mockProductRequest 模擬更新，回傳 mockProductRequest 轉成的 updateProduct，模擬查詢 id &#x3D;1 然後更新成 updateProduct</li>
+<li>驗證回傳 product 和 updateProduct 相同</li>
+<li>驗證調用 findById() 1 次</li>
+<li>驗證調用 save() 1 次</li>
+</ul>
+</li>
+<li><code>testUpdateProduct_NotFound</code><ul>
+<li>模擬查詢 id &#x3D; 3 商品不存在回傳空</li>
+<li>驗證調用 findById() 1 次</li>
+<li>驗證不調用到 save()</li>
+</ul>
+</li>
+<li><code>testDeleteProduct</code><ul>
+<li>模擬刪除 id &#x3D;1 商品不回傳值</li>
+<li>驗證調用 deleteById 1 次</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testCreateProduct</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Product</span> <span class="variable">newMockProduct</span> <span class="operator">=</span> productService.convertToModel(mockProductRequest);</span><br><span class="line"></span><br><span class="line">        when(productDao.save(any(Product.class))).thenReturn(newMockProduct);</span><br><span class="line"></span><br><span class="line">        <span class="type">Product</span> <span class="variable">createdProduct</span> <span class="operator">=</span> productService.createProduct(mockProductRequest);</span><br><span class="line"></span><br><span class="line">        assertNotNull(createdProduct);</span><br><span class="line">        assertEquals(<span class="string">&quot;New/Update Product&quot;</span>, createdProduct.getProductName());</span><br><span class="line">        verify(productDao, times(<span class="number">1</span>)).save(any(Product.class));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testUpdateProduct</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Product</span> <span class="variable">updateMcokProduct</span> <span class="operator">=</span> productService.convertToModel(mockProductRequest);</span><br><span class="line"></span><br><span class="line">        when(productDao.findById(<span class="number">1</span>)).thenReturn(Optional.of(mockProduct1));</span><br><span class="line">        when(productDao.save(any(Product.class))).thenReturn(updateMcokProduct);</span><br><span class="line"></span><br><span class="line">        <span class="type">Product</span> <span class="variable">updatedProduct</span> <span class="operator">=</span> productService.updateProduct(<span class="number">1</span>, mockProductRequest);</span><br><span class="line"></span><br><span class="line">        assertNotNull(updatedProduct);</span><br><span class="line">        assertEquals(<span class="string">&quot;New/Update Product&quot;</span>, updatedProduct.getProductName());</span><br><span class="line">        verify(productDao, times(<span class="number">1</span>)).findById(<span class="number">1</span>);</span><br><span class="line">        verify(productDao, times(<span class="number">1</span>)).save(any(Product.class));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testUpdateProduct_NotFound</span><span class="params">()</span> &#123;</span><br><span class="line">        when(productDao.findById(<span class="number">3</span>)).thenReturn(Optional.empty());</span><br><span class="line"></span><br><span class="line">        <span class="type">Product</span> <span class="variable">updatedProduct</span> <span class="operator">=</span> productService.updateProduct(<span class="number">3</span>, mockProductRequest);</span><br><span class="line"></span><br><span class="line">        assertNull(updatedProduct);</span><br><span class="line">        verify(productDao, times(<span class="number">1</span>)).findById(<span class="number">3</span>);</span><br><span class="line">        verify(productDao, never()).save(any(Product.class));</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testDeleteProduct</span><span class="params">()</span> &#123;</span><br><span class="line">        doNothing().when(productDao).deleteById(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        productService.deleteProductById(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        verify(productDao, times(<span class="number">1</span>)).deleteById(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>搜尋相關</p>
+<ul>
+<li><code>testSearchAndSortProducts</code><ul>
+<li>模擬查詢 ‘Test’ 回傳 mockProduct1, mockProduct2</li>
+<li>驗證回傳 2 筆數</li>
+<li>驗證執行後為降序排列</li>
+<li>驗證調用查詢 1 次</li>
+</ul>
+</li>
+<li><code>testSearchAndSortProducts_NullOrEmptyProductName</code><ul>
+<li>模擬不帶任何 productName 查詢仍回傳 mockProduct1, mockProduct2</li>
+<li>product &#x3D;&#x3D; null，驗證回傳 mockProduct1, mockProduct2 兩筆</li>
+<li>product &#x3D;&#x3D; “”，驗證回傳 mockProduct1, mockProduct2 兩筆</li>
+<li>驗證調用查詢 2 次 (上面兩種條件各一次)</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testGetAllProducts</span><span class="params">()</span> &#123;</span><br><span class="line">        mockProducts = Arrays.asList(mockProduct1, mockProduct2);</span><br><span class="line">        when(productDao.findAll()).thenReturn(mockProducts);</span><br><span class="line"></span><br><span class="line">        List&lt;Product&gt; products = productService.getAllProducts();</span><br><span class="line"></span><br><span class="line">        assertEquals(products.get(<span class="number">0</span>).getProductName(), <span class="string">&quot;Test Product&quot;</span>);</span><br><span class="line">        assertEquals(products.get(<span class="number">1</span>).getProductName(), <span class="string">&quot;Test Wireless Mouse&quot;</span>);</span><br><span class="line">        assertTrue(products.size() == <span class="number">2</span>);</span><br><span class="line">        verify(productDao, times(<span class="number">1</span>)).findAll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testGetProductById</span><span class="params">()</span> &#123;</span><br><span class="line">        when(productDao.findById(<span class="number">1</span>)).thenReturn(Optional.of(mockProduct1));</span><br><span class="line"></span><br><span class="line">        Optional&lt;Product&gt; product = productService.getProductById(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        assertTrue(product.isPresent());</span><br><span class="line">        assertEquals(product.get().getProductName(), <span class="string">&quot;Test Product&quot;</span>);</span><br><span class="line">        assertEquals(product.get().getUnitPrice(), <span class="number">10.0</span>);</span><br><span class="line">        assertEquals(product.get().getUnitsInStock(), <span class="number">100</span>);</span><br><span class="line">        verify(productDao, times(<span class="number">1</span>)).findById(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testGetProductById_NotFound</span><span class="params">()</span> &#123;</span><br><span class="line">        when(productDao.findById(<span class="number">3</span>)).thenReturn(Optional.empty());</span><br><span class="line"></span><br><span class="line">        Optional&lt;Product&gt; product = productService.getProductById(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">        assertFalse(product.isPresent());</span><br><span class="line">        verify(productDao, times(<span class="number">1</span>)).findById(<span class="number">3</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="訂單-Service-UnitTest"><a href="#訂單-Service-UnitTest" class="headerlink" title="訂單 Service UnitTest"></a>訂單 Service UnitTest</h2><p>再來針對新建訂單部分 Service 的單元測試</p>
+<p>盡量讓內部邏輯可以都被測驗到，每個方法裡的判斷都有走過一遍，這樣測試覆蓋率高也能確保程式運作正常。</p>
+<p>先注入並且初始化我們需要用到的 Bean，這邊主要測試 <code>OrderService</code>，所以加上 <code>@InjectMocks</code> 註解，其他應用到的 Dao 都用 <code>@Mock</code> 標住用 mock 產生虛擬元件注入有標住 <code>@InjectMocks</code> 的 OrderService</p>
+<p>預計可以拆成下面這些項目：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ExtendWith(MockitoExtension.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">OrderServiceTest</span> &#123;</span><br><span class="line">    <span class="meta">@InjectMocks</span></span><br><span class="line">    <span class="keyword">private</span> OrderService orderService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Mock</span></span><br><span class="line">    <span class="keyword">private</span> OrderInfoDao orderInfoDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Mock</span></span><br><span class="line">    <span class="keyword">private</span> OrderItemDao orderItemDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Mock</span></span><br><span class="line">    <span class="keyword">private</span> ProductDao productDao;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testCreateOrder_Success</span><span class="params">()</span> &#123;</span><br><span class="line">	    <span class="comment">// 正確創建訂單</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testCreateOrder_NotFoundProduct</span><span class="params">()</span> &#123;</span><br><span class="line">	    <span class="comment">// 訂單內商品不存在</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testCreateOrder_InsufficientStock</span><span class="params">()</span> &#123;</span><br><span class="line">	    <span class="comment">// 訂單內商品目前庫存不足</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>createOrder_Success</code>: 測試正確創建訂單<ul>
+<li>模擬每個有被呼叫到的 dao 都回應我們預期的結果</li>
+<li>驗證最後有回傳 response</li>
+<li>驗證庫存確實有被更新</li>
+<li>呼叫到的 dao 調用次數正確</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">testCreateOrder_Success</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// Arrange</span></span><br><span class="line">    <span class="type">Integer</span> <span class="variable">userId</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="type">CreateOrderInfoRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CreateOrderInfoRequest</span>();</span><br><span class="line">    <span class="type">BuyItem</span> <span class="variable">buyItem</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BuyItem</span>();</span><br><span class="line">    buyItem.setProductId(<span class="number">1</span>);</span><br><span class="line">    buyItem.setQuantity(<span class="number">2</span>);</span><br><span class="line">    request.setBuyItemList(Arrays.asList(buyItem));</span><br><span class="line"></span><br><span class="line">    <span class="type">Product</span> <span class="variable">product</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Product</span>();</span><br><span class="line">    product.setId(<span class="number">1</span>);</span><br><span class="line">    product.setProductName(<span class="string">&quot;Test Product&quot;</span>);</span><br><span class="line">    product.setUnitPrice(<span class="number">10.0</span>);</span><br><span class="line">    product.setUnitsInStock(<span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">OrderInfo</span> <span class="variable">orderInfo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OrderInfo</span>();</span><br><span class="line">    orderInfo.setId(<span class="number">1</span>);</span><br><span class="line">    orderInfo.setUserId(userId);</span><br><span class="line">    orderInfo.setTotalAmount(<span class="number">20.0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="type">OrderItem</span> <span class="variable">orderItem</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">OrderItem</span>();</span><br><span class="line">    orderItem.setId(<span class="number">1</span>);</span><br><span class="line">    orderItem.setOrderInfoId(<span class="number">1</span>);</span><br><span class="line">    orderItem.setProductId(<span class="number">1</span>);</span><br><span class="line">    orderItem.setQuantity(<span class="number">2</span>);</span><br><span class="line">    orderItem.setAmount(<span class="number">10.0</span>);</span><br><span class="line"></span><br><span class="line">    when(productDao.findById(<span class="number">1</span>)).thenReturn(Optional.of(product));</span><br><span class="line">    when(orderInfoDao.save(any())).thenReturn(orderInfo);</span><br><span class="line">    when(orderItemDao.saveAll(any())).thenReturn(Arrays.asList(orderItem));</span><br><span class="line"></span><br><span class="line">    <span class="type">CreateOrderResponse</span> <span class="variable">response</span> <span class="operator">=</span> orderService.createOrder(userId, request);</span><br><span class="line"></span><br><span class="line">    assertNotNull(response);</span><br><span class="line">    verify(productDao, times(<span class="number">1</span>)).save(any());</span><br><span class="line">    verify(productDao).save(argThat(savedProduct -&gt;</span><br><span class="line">            savedProduct.getId().equals(<span class="number">1</span>) &amp;&amp; savedProduct.getUnitsInStock() == <span class="number">3</span></span><br><span class="line">    ));</span><br><span class="line"></span><br><span class="line">    verify(orderInfoDao, times(<span class="number">1</span>)).save(any());</span><br><span class="line">    verify(orderItemDao, times(<span class="number">1</span>)).saveAll(any());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>createOrder_ProductNotFound</code>: 測試訂單內商品不存在<ul>
+<li>模擬 <code>ProductDao</code> 返回空的 <code>Optional</code></li>
+<li>驗證是否拋出了正確的異常</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testCreateOrder_ProductNotFound</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Integer</span> <span class="variable">userId</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="type">CreateOrderInfoRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CreateOrderInfoRequest</span>();</span><br><span class="line">        <span class="type">BuyItem</span> <span class="variable">buyItem</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BuyItem</span>();</span><br><span class="line">        buyItem.setProductId(<span class="number">1</span>);</span><br><span class="line">        buyItem.setQuantity(<span class="number">2</span>);</span><br><span class="line">        request.setBuyItemList(Arrays.asList(buyItem));</span><br><span class="line"></span><br><span class="line">        when(productDao.findById(<span class="number">1</span>)).thenReturn(Optional.empty());</span><br><span class="line">        assertThrows(ResponseStatusException.class, () -&gt; orderService.createOrder(userId, request));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>createOrder_InsufficientStock</code>: 測試訂單內商品目前庫存不足<ul>
+<li>模擬產品庫存量小於請求的數量</li>
+<li>驗證是否拋出 ResponseStatusException ，並檢查異常的狀態碼</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">testCreateOrder_InsufficientStock</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="type">Integer</span> <span class="variable">userId</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">        <span class="type">CreateOrderInfoRequest</span> <span class="variable">request</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CreateOrderInfoRequest</span>();</span><br><span class="line">        <span class="type">BuyItem</span> <span class="variable">buyItem</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BuyItem</span>();</span><br><span class="line">        buyItem.setProductId(<span class="number">1</span>);</span><br><span class="line">        buyItem.setQuantity(<span class="number">10</span>);</span><br><span class="line">        request.setBuyItemList(Arrays.asList(buyItem));</span><br><span class="line"></span><br><span class="line">        <span class="type">Product</span> <span class="variable">product</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Product</span>();</span><br><span class="line">        product.setId(<span class="number">1</span>);</span><br><span class="line">        product.setProductName(<span class="string">&quot;Test Product&quot;</span>);</span><br><span class="line">        product.setUnitPrice(<span class="number">10.0</span>);</span><br><span class="line">        product.setUnitsInStock(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">        when(productDao.findById(<span class="number">1</span>)).thenReturn(Optional.of(product));</span><br><span class="line"></span><br><span class="line">        <span class="type">ResponseStatusException</span> <span class="variable">exception</span> <span class="operator">=</span> assertThrows(ResponseStatusException.class,</span><br><span class="line">                () -&gt; orderService.createOrder(userId, request));</span><br><span class="line">        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>目前訂單部分測試分享到這邊，針對商品部分因為和先前介紹單元測試那邊類似就沒有多去寫，但開發上可以盡量把重要的功能都涵蓋是最好的。</p>
+<hr>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://oseanchen.github.io">Sean</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章連結: </span><span class="post-copyright-info"><a href="https://oseanchen.github.io/2024/10/19/%E9%9B%BB%E5%95%86-RESTFul-API-Spring-Security-3-UnitTest/">https://oseanchen.github.io/2024/10/19/%E9%9B%BB%E5%95%86-RESTFul-API-Spring-Security-3-UnitTest/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版權聲明: </span><span class="post-copyright-info">本部落格所有文章除特別聲明外，均採用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 許可協議。轉載請註明來自 <a href="https://oseanchen.github.io" target="_blank">Sean's Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" data-sites="facebook,twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/2024/10/19/%E9%9B%BB%E5%95%86-RESTFul-API-Spring-Security-2-%E8%A8%82%E5%96%AE%E5%8A%9F%E8%83%BD/" title="電商 RESTFul API + Spring Security  (2) 訂單功能"><img class="cover" src="https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">電商 RESTFul API + Spring Security  (2) 訂單功能</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 評論</span></div><div class="comment-switch"><span class="first-comment">Giscus</span><span id="switch-btn"></span><span class="second-comment">Disqus</span></div></div><div class="comment-wrap"><div><div id="giscus-wrap"></div></div><div><div id="disqus_thread"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目錄</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%95%86%E5%93%81-Service-UnitTest"><span class="toc-text">商品 Service UnitTest</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A8%82%E5%96%AE-Service-UnitTest"><span class="toc-text">訂單 Service UnitTest</span></a></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('https://oskarbogacz.dev/wp-content/uploads/2022/07/spring-logo-16-9-transparent-compressed.png')"><div id="footer-wrap"><div class="copyright">&copy;2022 - 2024 By Sean</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主題 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="閱讀模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="淺色和深色模式轉換"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="單欄和雙欄切換"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="設定"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目錄"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直達評論"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="返回頂部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"><script>(() => {
+  const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+  if ($mermaid.length === 0) return
+  const runMermaid = () => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    Array.from($mermaid).forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = '%%{init:{ \'theme\':\'' + theme + '\'}}%%\n'
+      const mermaidID = 'mermaid-' + index
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+
+      const renderV10 = () => {
+        renderFn.then(({svg}) => {
+          mermaidSrc.insertAdjacentHTML('afterend', svg)
+        })
+      }
+
+      const renderV9 = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      typeof renderFn === 'string' ? renderV9(renderFn) : renderV10()
+    })
+  }
+
+  const loadMermaid = () => {
+    window.loadMermaid ? runMermaid() : getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaid)
+  }
+
+  btf.addGlobalFn('themeChange', runMermaid, 'mermaid')
+
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script><script>(()=>{
+  const getGiscusTheme = theme => {
+    return theme === 'dark' ? 'dark' : 'light'
+  }
+
+  const loadGiscus = () => {
+    const config = Object.assign({
+      src: 'https://giscus.app/client.js',
+      'data-repo': 'oSeanChen/oSeanChen.github.io',
+      'data-repo-id': 'R_kgDOH0K4Aw',
+      'data-category-id': 'DIC_kwDOH0K4A84Ciek0',
+      'data-mapping': 'pathname',
+      'data-theme': getGiscusTheme(document.documentElement.getAttribute('data-theme')),
+      'data-reactions-enabled': '1',
+      crossorigin: 'anonymous',
+      async: true
+    },{"data-mapping":"title","data-strict":1,"data-input-position":"top"})
+
+    const ele = document.createElement('script')
+    for (let key in config) {
+      ele.setAttribute(key, config[key])
+    }
+    document.getElementById('giscus-wrap').appendChild(ele)
+  }
+
+  const changeGiscusTheme = theme => {
+    const sendMessage = message => {
+      const iframe = document.querySelector('iframe.giscus-frame')
+      if (!iframe) return
+      iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app')
+    }
+
+    sendMessage({
+      setConfig: {
+        theme: getGiscusTheme(theme)
+      }
+    });
+  }
+
+  btf.addGlobalFn('themeChange', changeGiscusTheme, 'giscus')
+
+  if ('Giscus' === 'Giscus' || !true) {
+    if (true) btf.loadComment(document.getElementById('giscus-wrap'), loadGiscus)
+    else loadGiscus()
+  } else {
+    window.loadOtherComment= loadGiscus
+  }
+})()</script><script>(() => {
+  const disqus_config = function () {
+    this.page.url = 'https://oseanchen.github.io/2024/10/19/%E9%9B%BB%E5%95%86-RESTFul-API-Spring-Security-3-UnitTest/'
+    this.page.identifier = '/2024/10/19/%E9%9B%BB%E5%95%86-RESTFul-API-Spring-Security-3-UnitTest/'
+    this.page.title = '電商 RESTFul API + Spring Security (3) UnitTest'
+  }
+
+  const disqusReset = () => {
+    window.DISQUS && window.DISQUS.reset({
+      reload: true,
+      config: disqus_config
+    })
+  }
+
+  btf.addGlobalFn('themeChange', disqusReset, 'disqus')
+
+  const loadDisqus = () =>{
+    if (window.DISQUS) disqusReset()
+    else {
+      const script = document.createElement('script')
+      script.src = 'https://https-oseanchen-github-io.disqus.com/embed.js'
+      script.setAttribute('data-timestamp', +new Date())
+      document.head.appendChild(script)
+    }
+  }
+
+  const getCount = async() => {
+    try {
+      const eleGroup = document.querySelector('#post-meta .disqus-comment-count')
+      if (!eleGroup) return
+      const cleanedLinks = eleGroup.href.replace(/#post-comment$/, '')
+
+      const res = await fetch(`https://disqus.com/api/3.0/threads/set.json?forum=https-oseanchen-github-io&api_key=&thread:link=${cleanedLinks}`,{
+        method: 'GET'
+      })
+      const result = await res.json()
+
+      const count = result.response.length ? result.response[0].posts : 0
+      eleGroup.textContent = count
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  if ('Giscus' === 'Disqus' || !true) {
+    if (true) btf.loadComment(document.getElementById('disqus_thread'), loadDisqus)
+    else {
+      loadDisqus()
+      GLOBAL_CONFIG_SITE.isPost && getCount()
+    }
+  } else {
+    window.loadOtherComment = loadDisqus
+  }
+})()</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜尋</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  資料庫載入中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜尋文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
